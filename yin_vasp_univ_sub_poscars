@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # B. Yin
 
 srcdir=`pwd`/y_src   # source dir

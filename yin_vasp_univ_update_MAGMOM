@@ -1,12 +1,18 @@
 #!/bin/bash
+#
+# update the MAGMOM info in INCAR for rerun
+# LIMIT: put MAGMOM at the end of INCAR
+# 
+# by B. Yin, 2018.10.24
+
+
+
+echo "yin_vasp_univ_update_MAGMOM:"
 
 
 
 out1=OUTCAR_magnetization
 out2=OUTCAR_MAGMOM
-rm $out1 
-rm $out2
-
 
 
 #================================
