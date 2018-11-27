@@ -47,8 +47,8 @@ echo -e $i1"\t"$j11"\t"$j22"\t"$j3 >> ./y_post_data
 
 
 
-jv=grep volume   OUTCAR | tail -1 | awk '{printf $5}'
-jp=grep pressure OUTCAR | tail -1 | awk '{printf $4}'
+jv=`grep volume   $resdir/OUTCAR | tail -1 | awk '{printf $5}'`
+jp=`grep pressure $resdir/OUTCAR | tail -1 | awk '{printf $4}'`
 
 echo -e $i1"\t"$jv"\t"$jp >> ./y_post_data_2
 
