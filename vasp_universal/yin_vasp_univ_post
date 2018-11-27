@@ -3,6 +3,8 @@
 # for vasp.5.3.5
 
 echo 'i1   energy(sigma->0)(eV)   EENTRO(eV)   -stress(kB)' > ./y_post_data
+echo 'i1   volume pressure(kB)'                             > ./y_post_data_2
+
 echo 'i1   job state: relaxed? time? CPUs? memory?'         > ./y_post_time
 echo 'i1   input parameters'                                > ./y_post_param
 echo 'i1   diff INCAR KPOINTS POTCAR sub.*'                 > ./y_post_diff
@@ -41,6 +43,17 @@ echo 'j3=' $j3
 
 
 echo -e $i1"\t"$j11"\t"$j22"\t"$j3 >> ./y_post_data
+
+
+
+
+jv=grep volume   OUTCAR | tail -1 | awk '{printf $5}'
+jp=grep pressure OUTCAR | tail -1 | awk '{printf $4}'
+
+echo -e $i1"\t"$jv"\t"$jp >> ./y_post_data_2
+
+
+
 
 #-------------------
 
