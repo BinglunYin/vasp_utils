@@ -1,0 +1,26 @@
+#!/bin/bash
+# B. Yin
+
+
+
+find ./ -name "WAVECAR"             -exec ls -lsh {} \;
+find ./ -name "WAVECAR"             -delete
+
+
+find ./ -name "CHG"                 -exec ls -lsh {} \;
+find ./ -name "CHG"                 -delete
+
+
+find ./ -name "vasprun.xml"         -exec ls -lsh {} \;
+find ./ -name "vasprun.xml"         -delete
+
+
+find ./ -name "slurm-*"  -size +1G  -exec ls -lsh {} \;
+find ./ -name "slurm-*"  -size +1G  -delete
+
+
+find ./ -name "PROCAR"              -exec ls -lsh {} \;
+find ./ -name "PROCAR"              -delete
+
+
+
