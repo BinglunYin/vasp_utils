@@ -1,0 +1,33 @@
+#!/bin/bash
+# B. Yin
+
+
+shopt -s extglob
+
+
+
+for i1 in `ls`
+do
+
+cd   $i1
+echo $i1
+
+
+cd y_dir
+    
+    for i2 in `ls`
+    do
+
+    cd   $i2
+    echo $i2
+    rm -v !("INCAR"|"KPOINTS"|"CONTCAR"|"OUTCAR")
+    cd ..
+
+    done
+
+cd ..
+cd ..
+
+done
+
+
