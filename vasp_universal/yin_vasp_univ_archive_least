@@ -2,24 +2,42 @@
 # B. Yin
 
 
-shopt -s extglob
+dirn=$1;
+dirn=${dirn%/};
 
+# dir_least
+dirl=$dirn_least
+
+cp -r $dirn $dirl
+
+
+
+#====================
+# clean
+#====================
+
+cd $dirl
+pwd
+
+
+shopt -s extglob
 
 
 for i1 in `ls`
 do
 
-cd   $i1
 echo $i1
+cd   $i1
 
+rm -rf y_src
 
 cd y_dir
     
     for i2 in `ls`
     do
 
-    cd   $i2
     echo $i2
+    cd   $i2
     rm -v !("INCAR"|"KPOINTS"|"CONTCAR"|"OUTCAR")
     cd ..
 
@@ -29,5 +47,17 @@ cd ..
 cd ..
 
 done
+
+cd ..
+
+#================
+# compress
+#================
+
+echo "compressing $dirl";
+tar -cJf  $dirl.tar.xz  $dirl;
+
+rm -r $dirl
+
 
 
