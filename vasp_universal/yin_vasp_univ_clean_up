@@ -1,0 +1,32 @@
+#!/bin/bash
+# B. Yin
+
+
+
+declare -a arr=(
+"WAVECAR"
+"CHG"
+"vasprun.xml"
+"PROCAR"
+)
+
+
+
+for i1 in "${arr[@]}"
+do
+
+find ./ -name $i1    -exec ls -lsh {} \;
+find ./ -name $i1    -delete
+
+done
+
+
+
+
+find ./ -name "slurm-*"  -size +1G  -exec ls -lsh {} \;
+find ./ -name "slurm-*"  -size +1G  -delete
+
+
+
+
+

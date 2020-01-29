@@ -3,61 +3,44 @@
 
 
 dirn=$1;
-dirn=${dirn%/};
+dirn=${dirn%/};         # to remove /
 
 # dir_least
-dirl=$dirn_least
+dirlst=${dirn}_least      # must use {} due to _ 
 
-cp -r $dirn $dirl
-
-
-
-#====================
-# clean
-#====================
-
-cd $dirl
-pwd
+echo $dirn
+echo $dirlst
 
 
-shopt -s extglob
+
+#=======================
+
+rm -rf $dirlst
+mkdir  $dirlst
+
+dirnPATH=`pwd`/$dirn
+dirlstPATH=`pwd`/$dirlst
+
+echo $dirnPATH 
+echo $dirlstPATH
 
 
-for i1 in `ls`
-do
 
-echo $i1
-cd   $i1
+#=======================
 
-rm -rf y_src
 
-cd y_dir
-    
-    for i2 in `ls`
-    do
+rsync -amv  --include={INCAR,KPOINTS,CONTCAR,OUTCAR,y_post_*}   \
+    --include="*/"  --exclude="*"  "${dirnPATH}/"  "${dirlstPATH}/" 
 
-    echo $i2
-    cd   $i2
-    rm -v !("INCAR"|"KPOINTS"|"CONTCAR"|"OUTCAR")
-    cd ..
 
-    done
 
-cd ..
-cd ..
+#=======================
 
-done
+echo "==>  compressing ..."
 
-cd ..
+tar -cJf  $dirlst.tar.xz  $dirlst;
 
-#================
-# compress
-#================
-
-echo "compressing $dirl";
-tar -cJf  $dirl.tar.xz  $dirl;
-
-rm -r $dirl
+rm -r $dirlst
 
 
 
