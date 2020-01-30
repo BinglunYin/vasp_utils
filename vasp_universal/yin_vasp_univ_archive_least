@@ -2,45 +2,59 @@
 # B. Yin
 
 
-dirn=$1;
-dirn=${dirn%/};         # to remove /
-
-# dir_least
-dirlst=${dirn}_least      # must use {} due to _ 
-
-echo $dirn
-echo $dirlst
-
+if [ -n "$1" ]; then      # If first parameter passed 
+ 
+    echo "==>  archiving $1 "
+    
+    
+    dirjob=$1;
+    dirjob=${dirjob%/};         # to remove /
+    
+    # make dir_least name
+    dirlst=${dirjob}_least      # must use {} due to _ 
+    
+    echo $dirjob
+    echo $dirlst
+    
+    
+    #=======================
+    
+    rm -rf $dirlst
+    mkdir  $dirlst
+    
+    dirjobPATH=`pwd`/$dirjob
+    dirlstPATH=`pwd`/$dirlst
+    
+    echo $dirjobPATH 
+    echo $dirlstPATH
+    
+    
+    #=======================
+    
+    rsync -am  --include={INCAR,KPOINTS,CONTCAR,OUTCAR,Y_*,y_post_*}   \
+        --include="*/"  --exclude="*"  "${dirjobPATH}/"  "${dirlstPATH}/" 
+    
+    
+    #=======================
+    
+    echo "==>  compressing"
+    
+    tar -cJf  $dirlst.tar.xz  $dirlst;
+    rm -r $dirlst
+    
+    echo "==>  done!"
+    
+    
+    
 
 
 #=======================
-
-rm -rf $dirlst
-mkdir  $dirlst
-
-dirnPATH=`pwd`/$dirn
-dirlstPATH=`pwd`/$dirlst
-
-echo $dirnPATH 
-echo $dirlstPATH
-
-
-
 #=======================
 
-
-rsync -amv  --include={INCAR,KPOINTS,CONTCAR,OUTCAR,y_post_*}   \
-    --include="*/"  --exclude="*"  "${dirnPATH}/"  "${dirlstPATH}/" 
-
-
-
-#=======================
-
-echo "==>  compressing ..."
-
-tar -cJf  $dirlst.tar.xz  $dirlst;
-
-rm -r $dirlst
+else
+    echo "==>  Please indicate the vasp job folder to archive. Abort!"
+ 
+fi
 
 
 
