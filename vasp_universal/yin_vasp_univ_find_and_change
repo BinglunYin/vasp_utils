@@ -1,0 +1,61 @@
+#!/bin/bash
+# B. Yin
+
+
+
+if [ -z "$1" ]; then      # empty $1 is true 
+    echo "==>  Please indicate the operation. Abort!"
+    exit 
+fi
+
+
+
+if [ -z "$2" ]; then      # empty is true
+    echo "==>  Please input the new value. Abort!"
+    exit
+fi
+
+
+
+case "$1" in
+
+    -a0) echo "==> changing a0 in POSCAR"
+           
+        for filen in ` find ./ -name 'POSCAR' `; do
+            echo -e "\n==>" $filen 
+            sed '2s/.*/'" $2"'/' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+    -ispin) echo "==> changing ISPIN in INCAR" 
+
+        for filen in ` find ./ -name 'INCAR' `; do
+            echo -e "\n==>" $filen
+            j1=`grep -n 'ISPIN'  $filen | cut -d ":" -f1`
+            sed $j1's/.*/ ISPIN = '"$2"'      # 1=non; 2=spin /' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+    -isif) echo "==> changing ISIF in INCAR"
+
+        for filen in ` find ./ -name 'INCAR' `; do
+            echo -e "\n==>" $filen
+            j1=`grep -n 'ISIF'  $filen | cut -d ":" -f1`
+            sed $j1's/.*/ ISIF = '"$2"'      # fix: 2=box; 3=none; 4=volume /' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+    *)  echo "==>  Option $1 not recognized. Abort!" 
+        exit
+        ;;   
+esac
+
+
+
+
