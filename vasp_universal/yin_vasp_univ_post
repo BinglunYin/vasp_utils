@@ -55,7 +55,7 @@ sub_post(){
    
     
     refdir=`ls -d -- $workdir/*/  |   head -1`
-    echo "refdir: " $refdir
+    echo "refdir:" $refdir
  
     declare -a arr=(
     "INCAR"
@@ -68,16 +68,18 @@ sub_post(){
     uf=0
     ut=0
     ur=0
-    
+   
+
+ 
     #===================
     # loop
     #===================
    
     for i1 in `ls $workdir` ; do
     
-        echo -e "\n==> " $i1
-        resdir=./y_dir/$i1
-       
+        echo -e "\n==>" $i1
+        resdir=$workdir/$i1
+        echo "resdir:" $resdir 
  
         #--------------------
         
@@ -174,7 +176,7 @@ sub_post(){
     cat y_post_time
     echo -e " "
     
-    ls -lshG ./y_dir/*/slurm-*
+    ls -lshG $workdir/*/slurm-*
     echo -e " "
 }
 
