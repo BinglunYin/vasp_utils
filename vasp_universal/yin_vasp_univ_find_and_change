@@ -2,12 +2,10 @@
 # B. Yin
 
 
-
-if [ -z "$1" ]; then      # empty $1 is true 
-    echo "==>  Please indicate the operation. Abort!"
+if [ -z "$1" ]; then      # empty is true 
+    echo "==>  Please indicate the tag to modify. Abort!"
     exit 
 fi
-
 
 
 if [ -z "$2" ]; then      # empty is true
@@ -16,38 +14,57 @@ if [ -z "$2" ]; then      # empty is true
 fi
 
 
+sub_change(){
+    file1=$1
+    tag1=$2
+    val1=$3
+    echo "==> changing" $2 "in" $1 "to" $3 ": "
+
+    for filen in `find ./ -type f -name $file1`; do
+        echo $filen
+        j1=`grep -n  $tag1  $filen | head -1 | cut -d ":" -f1`
+        sed $j1's/.*/'"$val1"'/' $filen > temp
+        mv temp $filen
+    done
+}
+
+
+
+
 
 case "$1" in
 
-    -a0) echo "==> changing a0 in POSCAR"
-           
-        for filen in ` find ./ -name 'POSCAR' `; do
-            echo -e "\n==>" $filen 
+    -a0) 
+        echo "==> changing a0 in POSCAR to" $2 ": "
+        for filen in ` find ./ -type f -name 'POSCAR' `; do
+            echo $filen 
             sed '2s/.*/'" $2"'/' $filen > temp
             mv temp $filen
         done
         ;;
 
 
-    -ispin) echo "==> changing ISPIN in INCAR" 
-
-        for filen in ` find ./ -name 'INCAR' `; do
-            echo -e "\n==>" $filen
-            j1=`grep -n 'ISPIN'  $filen | cut -d ":" -f1`
-            sed $j1's/.*/ ISPIN = '"$2"'      # 1=non; 2=spin /' $filen > temp
-            mv temp $filen
-        done
+    -ispin) 
+        str=" ISPIN = $2      # 1=non; 2=spin "
+        sub_change  INCAR  ISPIN  "$str" 
         ;;
 
 
-    -isif) echo "==> changing ISIF in INCAR"
+    -isif) 
+        str=" ISIF = $2      # fix: 2=box; 3=none; 4=volume "
+        sub_change  INCAR  ISIF  "$str"
+        ;;
 
-        for filen in ` find ./ -name 'INCAR' `; do
-            echo -e "\n==>" $filen
-            j1=`grep -n 'ISIF'  $filen | cut -d ":" -f1`
-            sed $j1's/.*/ ISIF = '"$2"'      # fix: 2=box; 3=none; 4=volume /' $filen > temp
-            mv temp $filen
-        done
+
+    -ediffg) 
+        str=" EDIFFG = $2      # -1E-3 "
+        sub_change  INCAR  EDIFFG  "$str"
+        ;;
+
+
+    -isym) 
+        str=" ISYM = $2      # 0=off; 2=on "
+        sub_change  INCAR  ISYM  "$str"
         ;;
 
 
