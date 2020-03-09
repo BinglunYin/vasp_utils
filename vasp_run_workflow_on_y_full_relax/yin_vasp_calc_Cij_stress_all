@@ -1,0 +1,21 @@
+#!/bin/bash
+
+mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_calc_Cij_stress.py
+
+#--------------------
+
+d0=`pwd`
+
+for dirn in ` find ./ -name 'y_Cij_stress*' `; do
+    cd $dirn
+    echo "==>" `pwd`
+    
+    yin_vasp_univ_post 
+    $mycmd
+    
+    cd $d0
+done
+
+
+
+

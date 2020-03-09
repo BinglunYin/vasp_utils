@@ -83,15 +83,15 @@ for i in np.arange(6):
     
 fitres = solve(myeqn, myvar)
 
-C11_avg = (fitres[c[0, 0]] +fitres[c[1, 1]] +fitres[c[2, 2]] )/3
-C12_avg = (fitres[c[0, 1]] +fitres[c[0, 2]] +fitres[c[1, 2]] )/3
-C44_avg = (fitres[c[3, 3]] +fitres[c[4, 4]] +fitres[c[5, 5]] )/3
+C11 = np.array([ fitres[c[0, 0]] , fitres[c[1, 1]] , fitres[c[2, 2]] ], dtype=np.float64 )
+C12 = np.array([ fitres[c[0, 1]] , fitres[c[0, 2]] , fitres[c[1, 2]] ], dtype=np.float64 )
+C44 = np.array([ fitres[c[3, 3]] , fitres[c[4, 4]] , fitres[c[5, 5]] ], dtype=np.float64 )  
 
-C14_avg = 0
+C14=[]
 for i in np.arange(3):
     for j in np.arange(3, 6, 1):
-        C14_avg = C14_avg + fitres[c[i, j]]
-C14_avg = C14_avg/9
+        C14.append( fitres[c[i, j]] )
+C14 = np.array(C14, dtype=np.float64 )
 
 
 #====================
@@ -129,13 +129,16 @@ for i in np.arange(6):
     f.write(" \n")
 
 
-f.write("\n# averaged C11, C12, C44: \n"  )
-f.write("%8.2f %8.2f %8.2f \n" %( C11_avg, C12_avg, C44_avg) )
+f.write("\n# mean and std, C11, C12, C44;  C14: \n"  )
+f.write("%8.2f %8.2f \n" %( C11.mean(), C11.std()) )
+f.write("%8.2f %8.2f \n" %( C12.mean(), C12.std()) )
+f.write("%8.2f %8.2f \n" %( C44.mean(), C44.std()) )
 
+f.write("\n%8.2f %8.2f \n\n" %( C14.mean(), C14.std()) )
 
-f.write("\n# averaged C14: \n"  )
-f.write("%8.2f \n\n" %( C14_avg) )
 
 f.close() 
+
+
 
 
