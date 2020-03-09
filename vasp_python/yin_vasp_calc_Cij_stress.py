@@ -134,7 +134,7 @@ f.write("%8.2f %8.2f %8.2f \n" %( C11_avg, C12_avg, C44_avg) )
 
 
 f.write("\n# averaged C14: \n"  )
-f.write("%8.2f \n" %( C14_avg) )
+f.write("%8.2f \n\n" %( C14_avg) )
 
 f.close() 
 
