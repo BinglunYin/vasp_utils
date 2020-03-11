@@ -31,11 +31,12 @@ sub_run_Cij(){
 
     case "$1" in
         -elem) echo "==> run Cij for elements "
-                     
-               ;;
+            yin_slurm_find_and_change  -time  2          
+            yin_slurm_find_and_change  -partition  parallel    
+            ;;
         
-            *) echo "==> run Cij for supercell " 
-               ;;   
+        *) echo "==> run Cij for supercell " 
+            ;;   
     esac
     
     cd ..
