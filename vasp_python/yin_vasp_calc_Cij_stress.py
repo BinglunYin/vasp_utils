@@ -21,8 +21,8 @@ s = np.transpose(s)* (-0.1)   # stress data, 6*7, [GPa]
 
 # direct results
 
-Cij_d = s[:,0:6].copy()
-Cij_d = (Cij_d - s[:,-1] ) /0.002
+s_d = ( s[:,0:6].copy().T - s[:,-1].copy() ).T
+Cij_d = s_d /0.002
 
 
 # fitting
@@ -104,6 +104,14 @@ for i in np.arange(s.shape[0]):
     for j in np.arange(s.shape[1]):
         f.write("%10.6f " %(s[i,j]) )
     f.write(" \n")
+
+
+f.write("\n# stress_d data (GPa): \n"  )
+for i in np.arange(s_d.shape[0]):
+    for j in np.arange(s_d.shape[1]):
+        f.write("%10.6f " %(s_d[i,j]) )
+    f.write(" \n")
+
 
 
 f.write("\n# Cij, direct results: \n"  )
