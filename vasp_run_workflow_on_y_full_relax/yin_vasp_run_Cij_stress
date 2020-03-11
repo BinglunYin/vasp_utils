@@ -63,7 +63,7 @@ sub_run_Cij(){
     
     #=====================
     
-    dirCij=y_Cij_stress_big
+    dirCij=y_Cij_stress
     
     rm -rI  $dirCij
     mkdir   $dirCij
