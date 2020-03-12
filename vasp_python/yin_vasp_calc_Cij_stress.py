@@ -7,7 +7,7 @@ import yin_vasp_func as vf
 
 jobn, Etot, Eent, pres = vf.vasp_read_post_data()
 
-if jobn.shape[0] < 5.9:
+if Etot.shape[0] < 5.9:
     import sys
     sys.exit("\n==> ABORT: insufficient data \n" )
 
