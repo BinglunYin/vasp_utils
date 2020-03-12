@@ -16,7 +16,7 @@ s[:,3] = temp[:,4]
 s[:,4] = temp[:,5]
 s[:,5] = temp[:,3]
 
-s = np.transpose(s)* (-0.1)   # stress data, 6*7, [GPa]
+s = s.T *(-0.1)   # stress data, 6*7, [GPa]
 
 
 # direct results
@@ -114,10 +114,10 @@ for i in np.arange(s_d.shape[0]):
 
 
 
-f.write("\n# Cij, direct results: \n"  )
+f.write("\n# Cij_d, direct results: \n"  )
 for i in np.arange(Cij_d.shape[0]):
     for j in np.arange(Cij_d.shape[1]):
-        f.write("%8.2f " %(Cij_d[i,j]) )
+        f.write("%10.2f " %(Cij_d[i,j]) )
     f.write(" \n")
 
 
@@ -125,9 +125,9 @@ f.write("\n# Cij, fitting results: \n"  )
 for i in np.arange(6):
     for j in np.arange(6):
         if j<i:
-            f.write("%8s " %('*') )
+            f.write("%10s " %('*') )
         else:
-            f.write("%8.2f " %(fitres[c[i, j]]) )
+            f.write("%10.2f " %(fitres[c[i, j]]) )
     f.write(" \n")
 
 
@@ -138,11 +138,11 @@ for i in np.arange(6):
 
 
 f.write("\n# mean and std, C11, C12, C44;  C14: \n"  )
-f.write("%8.2f %8.2f \n" %( C11.mean(), C11.std()) )
-f.write("%8.2f %8.2f \n" %( C12.mean(), C12.std()) )
-f.write("%8.2f %8.2f \n" %( C44.mean(), C44.std()) )
+f.write("%10.2f %10.2f \n" %( C11.mean(), C11.std()) )
+f.write("%10.2f %10.2f \n" %( C12.mean(), C12.std()) )
+f.write("%10.2f %10.2f \n" %( C44.mean(), C44.std()) )
 
-f.write("\n%8.2f %8.2f \n\n" %( C14.mean(), C14.std()) )
+f.write("\n%10.2f %10.2f \n\n" %( C14.mean(), C14.std()) )
 
 
 f.close() 
