@@ -53,7 +53,11 @@ def read_pressure(filename='OUTCAR'):
         if 'in kB' in line: 
             del y
             y=line
-   
+  
+    if y == 0:
+        import sys
+        sys.exit("\n==> ABORT: no pressure found in OUTCAR \n" )
+
     # the last line
     pres = np.array([])
     for i in np.arange(6):
