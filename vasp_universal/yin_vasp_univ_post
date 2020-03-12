@@ -24,7 +24,7 @@ main(){
     for dirn in $mylist; do
         cd $dirn
         cd ..
-        echo -e "\n==> post the following dir:"
+        echo -e "\n==> post in the following dir:"
         pwd
    
         sub_post 

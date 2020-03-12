@@ -8,7 +8,7 @@ d0=`pwd`
 
 for dirn in ` find ./ -name 'y_Cij_stress*' `; do
     cd $dirn
-    echo "==>" `pwd`
+    echo -e "\n==>" `pwd`
     
     yin_vasp_univ_post 
     $mycmd
