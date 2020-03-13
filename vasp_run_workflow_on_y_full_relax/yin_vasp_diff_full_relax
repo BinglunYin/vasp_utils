@@ -36,7 +36,7 @@ for i1 in $mylist; do
         diff $refdir/$j1      $i1/$j1  >> $p_diff
     done
     
-    echo -e "\ngrep TITEL POTCAR:\n"              >> $p_diff
+    echo -e "\ngrep TITEL POTCAR:\n"   >> $p_diff
     grep TITEL  $i1/POTCAR             >> $p_diff
 done
 
