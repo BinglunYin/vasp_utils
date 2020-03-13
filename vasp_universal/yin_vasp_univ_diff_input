@@ -1,15 +1,13 @@
 #!/bin/bash
 
 
-workdir=y_full_relax
-
-p_diff=`pwd`/y_post_diff_full_relax
+p_diff=`pwd`/y_post_diff_input
 echo 'DIFF'  >   $p_diff
 
 
-mylist=`find ./ -type d -name $workdir`
+mylist=`find ./   -type d -name 'y_src'   -o   -type d -name 'y_full_relax' `
 
-refdir=`find ./ -type d -name $workdir | head -1`
+refdir=`find ./   -type d -name 'y_src'   -o   -type d -name 'y_full_relax' | head -1 `
 echo "refdir:" $refdir
 
 
@@ -29,7 +27,7 @@ for i1 in $mylist; do
 
     echo -e "\n==>" $i1
     
-    echo -e "\n==================\n "$i1"\n==================\n " >> $p_diff
+    echo -e "\n==================\n "$i1"\n================== " >> $p_diff
     
     for j1 in "${arr[@]}" ; do
         echo -e "\n$j1:\n"             >> $p_diff  
@@ -39,8 +37,6 @@ for i1 in $mylist; do
     echo -e "\ngrep TITEL POTCAR:\n"   >> $p_diff
     grep TITEL  $i1/POTCAR             >> $p_diff
 done
-
-
 
 
 
