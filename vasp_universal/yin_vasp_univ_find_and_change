@@ -68,6 +68,18 @@ case "$1" in
         ;;
 
 
+    -nsw)
+        str=" NSW = $2      # ionic steps, 0=static "
+        sub_change  INCAR  NSW  "$str"
+        ;;
+
+
+    -algo)
+        str=" ALGO = $2      # N=Normal, F=Fast "
+        sub_change  INCAR  ALGO  "$str"
+        ;;
+
+
     *)  echo "==>  Option $1 not recognized. Abort!" 
         exit
         ;;   
