@@ -21,10 +21,14 @@ sub_run_cohesive(){
 
     cp -r $srcdir0  $srcdir 
     cd $srcdir
+
     yin_vasp_univ_find_and_change  -nsw  0
-    yin_vasp_univ_find_and_change  -algo N
+    yin_vasp_univ_find_and_change  -algo  N
+    yin_vasp_univ_find_and_change  -ismear  -5
+
     yin_slurm_find_and_change  -time  2          
     yin_slurm_find_and_change  -partition  parallel    
+
     cd ..
    
  
@@ -66,7 +70,7 @@ sub_run_cohesive(){
  
         
         echo 'submit dir:' `pwd`
-        sbatch sub.*
+#        sbatch sub.*
         cd ..
         
     done

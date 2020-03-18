@@ -80,6 +80,12 @@ case "$1" in
         ;;
 
 
+    -ismear)
+        str=" ISMEAR = $2      # 1=1st order MP, -5=tetrahedron "
+        sub_change  INCAR  ISMEAR  "$str"
+        ;;
+
+
     *)  echo "==>  Option $1 not recognized. Abort!" 
         exit
         ;;   
