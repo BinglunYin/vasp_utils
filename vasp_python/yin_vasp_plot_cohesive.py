@@ -35,10 +35,9 @@ if Etot.min() != Emin:
 
 
 if  Etot[-5:].std() > 5e-4 :
-    import sys
-    sys.exit('Eatom is wrong. Abort!')
-else:
-    Eatom = Etot[-1]
+    print('WARNING: Eatom might be wrong!')
+
+Eatom = Etot[-1]
 
 Ecoh = Eatom - Emin
 
