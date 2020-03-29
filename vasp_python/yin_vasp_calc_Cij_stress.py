@@ -88,15 +88,32 @@ for i in np.arange(6):
     
 fitres = solve(myeqn, myvar)
 
-C11 = np.array([ fitres[c[0, 0]] , fitres[c[1, 1]] , fitres[c[2, 2]] ], dtype=np.float64 )
-C12 = np.array([ fitres[c[0, 1]] , fitres[c[0, 2]] , fitres[c[1, 2]] ], dtype=np.float64 )
-C44 = np.array([ fitres[c[3, 3]] , fitres[c[4, 4]] , fitres[c[5, 5]] ], dtype=np.float64 )  
 
 C14=[]
 for i in np.arange(3):
     for j in np.arange(3, 6, 1):
         C14.append( fitres[c[i, j]] )
 C14 = np.array(C14, dtype=np.float64 )
+
+
+# for cubic
+Cij_cubic = [
+[ fitres[c[0, 0]] , fitres[c[1, 1]] , fitres[c[2, 2]] ], 
+[ fitres[c[0, 1]] , fitres[c[0, 2]] , fitres[c[1, 2]] ], 
+[ fitres[c[3, 3]] , fitres[c[4, 4]] , fitres[c[5, 5]] ], 
+]
+
+
+# for hcp
+Cij_hcp = [
+[ fitres[c[0, 0]] , fitres[c[1, 1]]  ], 
+[ fitres[c[0, 1]]  ], 
+[ fitres[c[0, 2]] , fitres[c[1, 2]]  ], 
+[ fitres[c[2, 2]]  ], 
+[ fitres[c[3, 3]] , fitres[c[4, 4]]  ],
+[ fitres[c[5, 5]]  ],
+]
+
 
 
 #====================
@@ -116,7 +133,6 @@ for i in np.arange(s_d.shape[0]):
     for j in np.arange(s_d.shape[1]):
         f.write("%10.6f " %(s_d[i,j]) )
     f.write(" \n")
-
 
 
 f.write("\n# Cij_d, direct results: \n"  )
@@ -142,12 +158,28 @@ for i in np.arange(6):
     f.write(" \n")
 
 
-f.write("\n# mean and std, C11, C12, C44;  C14: \n"  )
-f.write("%10.2f %10.2f \n" %( C11.mean(), C11.std()) )
-f.write("%10.2f %10.2f \n" %( C12.mean(), C12.std()) )
-f.write("%10.2f %10.2f \n" %( C44.mean(), C44.std()) )
+f.write("\n# mean and std: \n"  )
+f.write("# C14: \n"  )
+f.write("%10.2f %10.2f \n" %( C14.mean(), C14.std()) )
 
-f.write("\n%10.2f %10.2f \n\n" %( C14.mean(), C14.std()) )
+
+f.write("\n# if cubic, C11, C12, C44: \n"  )
+cij_mean=np.array([])
+for i in np.arange(len(Cij_cubic)):
+    temp=np.array(Cij_cubic[i],  dtype=np.float64 )
+    cij_mean = np.append(cij_mean, temp.mean() )
+    f.write("%10.2f %10.2f \n" %( temp.mean(), temp.std()) )
+
+
+f.write("\n# if hcp, C11, C12, C13, C33, C44, (C66): \n"  )
+cij_mean=np.array([])
+for i in np.arange(len(Cij_hcp)):
+    temp=np.array(Cij_hcp[i],  dtype=np.float64 )
+    cij_mean = np.append(cij_mean, temp.mean() )
+    f.write("%10.2f %10.2f \n" %( temp.mean(), temp.std()) )
+
+f.write("\n# C66-(C11-C12)/2: \n"  )
+f.write("%10.2f \n\n" %( cij_mean[5] - ( cij_mean[0] - cij_mean[1] )/2 ))
 
 
 f.close() 
