@@ -17,7 +17,7 @@ natoms = atoms_pos.shape[0]
 if narg == 1:
     if sys.argv[1] == '-FFT':
         constrained_atoms = np.arange(natoms)  # apply constraint to all atoms
-        constraint_direction = [0,0,1]            # relax only in the [0,0,1] direction
+        constraint_direction = ASE_Atoms.cell[2,:]       # relax only in the a3 direction
         zonly_constraint = FixedLine(constrained_atoms, constraint_direction)
         ASE_Atoms.set_constraint(zonly_constraint)
 
