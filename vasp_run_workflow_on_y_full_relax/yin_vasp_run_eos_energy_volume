@@ -46,9 +46,9 @@ sub_run_eos(){
 
     #=====================
 
-    rm -rI y_eos_E_V
-    mkdir  y_eos_E_V
-    cd     y_eos_E_V
+    rm -rI y_eos
+    mkdir  y_eos
+    cd     y_eos
 
     mkdir y_dir
     cd    y_dir
