@@ -1,0 +1,61 @@
+#!/bin/bash
+
+
+if [ -z "$1" ]; then      # empty is true 
+    echo "==>  Please indicate what to plot. Abort!"
+    exit 
+fi
+
+
+d0=`pwd`
+
+sub_plot_all(){
+    workdir=$1
+    mycmd=$2
+    echo "==> workdir: " $workdir
+    echo "==> mycmd: " $mycmd
+
+    for dirn in ` find ./  -type d  -name "$workdir" `; do
+        cd $dirn
+        echo -e "\n==>" `pwd`
+    
+       # yin_vasp_univ_post 
+       # $mycmd
+    
+        cd $d0
+    done
+}
+
+
+
+
+case "$1" in
+
+    -eos) 
+        workdir=y_eos
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_eos.py
+	sub_plot_all  $workdir  $mycmd 
+        ;;
+
+	
+    -cohesive) 
+        workdir=y_cohesive
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_cohesive.py
+	sub_plot_all  $workdir  $mycmd 
+        ;;
+
+    -Cij_stress) 
+        workdir=y_Cij_stress
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_Cij_stress.py
+	sub_plot_all  $workdir  $mycmd 
+        ;;
+
+    *) 
+        echo "==>  Option $1 not recognized. Abort!" 
+        exit
+        ;;   
+esac
+
+
+
+
