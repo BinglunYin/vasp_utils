@@ -117,7 +117,7 @@ Cij_hcp = [
 
 
 #====================
-f = open("y_post_Cij.txt","w+")
+f = open("y_post_Cij_stress.txt","w+")
 
 f.write("# Cij from stress-strain method: \n" )
 

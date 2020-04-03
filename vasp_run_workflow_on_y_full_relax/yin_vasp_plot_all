@@ -19,8 +19,8 @@ sub_plot_all(){
         cd $dirn
         echo -e "\n==>" `pwd`
     
-       # yin_vasp_univ_post 
-       # $mycmd
+        yin_vasp_univ_post 
+        $mycmd
     
         cd $d0
     done
