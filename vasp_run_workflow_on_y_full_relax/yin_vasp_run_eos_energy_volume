@@ -5,14 +5,14 @@
 main(){
     srcdir0=y_full_relax
 
-    if [ -d "$srcdir0" ]
-    then
-        sub_run_eos $1
-    else
+    if [ ! -d "$srcdir0" ]; then
         echo "==> no $srcdir0 found! Abort!"
         exit
     fi
+
+    sub_run_eos $1
 }
+
 
 
 sub_run_eos(){
@@ -44,12 +44,11 @@ sub_run_eos(){
     a0=`sed -n '2,2p' $srcdir/POSCAR | awk '{printf "%.16f", $1}'`
     echo 'a0' $a0
 
-
     #=====================
 
-    rm -rI y_E_V
-    mkdir  y_E_V
-    cd     y_E_V
+    rm -rI y_eos_E_V
+    mkdir  y_eos_E_V
+    cd     y_eos_E_V
 
     mkdir y_dir
     cd    y_dir
@@ -69,14 +68,13 @@ sub_run_eos(){
 
         a0new=`echo "scale=16; $a0*$el" | bc`
 
-
         sed '2s/.*/'"$a0new"'/' ./POSCAR > ./temp
         mv ./temp ./POSCAR
 
         echo 'submit dir:' `pwd`
-        #sbatch sub.*
-
+        sbatch sub.*
         cd ..
+    
     done
 
     rm -rf $srcdir
