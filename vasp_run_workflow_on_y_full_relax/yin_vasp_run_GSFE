@@ -1,0 +1,77 @@
+#!/bin/bash
+
+
+if [ -z "$1" ]; then      # empty is true 
+    echo "==>  Please indicate which GSFE to compute. Abort!"
+    exit 
+fi
+
+srcdir=`pwd`/y_full_relax
+
+a1=`sed -n '3,3p' $srcdir/POSCAR | awk '{printf "%.16f", $1}'`
+a2=`sed -n '3,3p' $srcdir/POSCAR | awk '{printf "%.16f", $2}'`   
+
+b1=`sed -n '4,4p' $srcdir/POSCAR | awk '{printf "%.16f", $1}'`
+b2=`sed -n '4,4p' $srcdir/POSCAR | awk '{printf "%.16f", $2}'`
+
+c1=`sed -n '5,5p' $srcdir/POSCAR | awk '{printf "%.16f", $1}'`
+c2=`sed -n '5,5p' $srcdir/POSCAR | awk '{printf "%.16f", $2}'`
+c3=`sed -n '5,5p' $srcdir/POSCAR | awk '{printf "%.16f", $3}'`
+
+echo $a1 $a2 
+echo $b1 $b2 
+echo $c1 $c2 $c3
+
+
+
+case "$1" in
+    -fcc111) echo "==> run GSFE for fcc111: "
+        workdir=y_GSFE_fcc111               
+        N1=11  
+        bp1=`echo "scale=16;  (-$a1 +$b1) /3.0 *1.1" | bc` 
+        bp2=`echo "scale=16;  (-$a2 +$b2) /3.0 *1.1" | bc`                 
+        ;;
+    
+    *)  echo "==>  Option $1 not recognized. Abort!" 
+        exit
+        ;;   
+esac
+
+
+
+#========================
+
+rm -rI $workdir
+mkdir  $workdir
+cd     $workdir
+
+mkdir  y_dir
+cd     y_dir
+
+
+for ((i1=0; i1<=$N1; i1=i1+1)) ;  do
+    dirn1=`printf "%02d" "$i1"`
+    mkdir $dirn1
+    cd $dirn1
+    
+    echo '====================' $dirn1
+    cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,sub.*,Y_*,CHGCAR} ./
+    
+    c1_new=`echo "scale=16; $c1+ $bp1 *($i1/$N1)" | bc`
+    c2_new=`echo "scale=16; $c2+ $bp2 *($i1/$N1)" | bc`
+    
+    data1=`printf " %.16f  %.16f  %.16f" "$c1_new" "$c2_new" "$c3"`
+    echo $data1
+    
+    sed '5s/.*/'"$data1"'/' ./POSCAR > ./temp
+    mv temp POSCAR
+    
+    echo 'submit dir:' `pwd`
+    sbatch sub.*
+    
+    cd ..
+done
+
+
+
+
