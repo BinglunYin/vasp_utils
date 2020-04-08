@@ -11,7 +11,10 @@ def main():
     qe = vf.phy_const('qe')
     
     jobn, Etot, Eent, pres = vf.vasp_read_post_data()
-    # njobs = len(jobn)  # number of jobs
+    njobs = len(jobn)  # number of jobs
+
+    if njobs < 1.5:
+        sys.exit('==> ABORT! more structures needed. ')
 
     if jobn[0] != '00':
         sys.exit('==> ABORT! no reference state. ')
@@ -56,7 +59,7 @@ def check_constraints(Etot, latoms):
         dlatt = latoms[i].cell[:] - latoms[0].cell[:]
         temp = np.linalg.norm(dlatt[0:2, :])
         if temp > 1e-10:
-            print('\n==> jobn, norm: {0}'.format([i, temp]) )
+            print('\n==> i, norm: {0}'.format([i, temp]) )
             sys.exit("==> ABORT: in-plane lattices relaxed. \n" )
     
         temp = dlatt[2,:].copy()
@@ -71,7 +74,7 @@ def check_constraints(Etot, latoms):
         temp = np.linalg.norm(dpos[:,0:2])
         if temp > 1e-10:
             print(dpos)
-            print('\n==> jobn, norm: {0}'.format([i, temp]) )
+            print('\n==> i, norm: {0}'.format([i, temp]) )
             sys.exit("==> ABORT: atoms show in-plane relaxation. \n" )
     
         temp = dpos[:, 2].copy()
@@ -89,7 +92,7 @@ def check_constraints(Etot, latoms):
     for i in np.arange(njobs):
         temp = np.abs(da3[i, 1]*da3[1, 0] - da3[i, 0]*da3[1, 1])
         if temp > 1e-10:
-            print('\n==> jobn, norm: {0}'.format([i, temp]) )
+            print('\n==> i, norm: {0}'.format([i, temp]) )
             sys.exit("==> ABORT: slip is not along a line. \n" )
     
     return dE, da3, dpos3
@@ -118,13 +121,13 @@ def write_output(Asf, a11, a22, sf, usf, jobn, gamma, da3):
     f = open('y_post_GSFE.txt','w+')
     f.write('# VASP GSFE: \n' )
     
-    f.write('\n%16s: %16.8f \n' %('Asf (Ang^2)', Asf) )
+    f.write('\n%20s: %16.8f \n' %('Asf (Ang^2)', Asf) )
 
     if sf.shape[0] > 0.5 :
-        f.write('%16s: %16.8f \n' %('sf (mJ/m^2)', sf.min() ) )
+        f.write('%20s: %16.8f \n' %('local min (mJ/m^2)', sf.min() ) )
     
     if usf.shape[0] > 0.5:
-        f.write('%16s: %16.8f \n' %('usf (mJ/m^2)', usf.min() ) )
+        f.write('%20s: %16.8f \n' %('local max (mJ/m^2)', usf.min() ) )
         
         
     f.write('\n%5s %16s %12s %10s %10s %10s \n' \
@@ -163,7 +166,7 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
         xi = np.append(xi, float(jobn[i]) )
         disp = np.append(disp, np.linalg.norm(da3[i, 0:2]))
 
-    xi = xi / np.around(xi.max(), -1)
+    xi = xi / np.around( np.max([xi.max(), 10]) , -1)
 
     ax1[0].plot(xi, gamma, '-o')   
     ax1[1].plot(xi, da3[:,2], '-o')
