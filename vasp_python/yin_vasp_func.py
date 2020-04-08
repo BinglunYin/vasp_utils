@@ -2,6 +2,37 @@
 
 
 import numpy as np
+from ase.io.vasp import read_vasp
+import matplotlib.pyplot as plt
+
+
+
+def get_list_of_atoms():
+    jobn, Etot, Eent, pres = vasp_read_post_data()
+    latoms = []   # list of ASE_Atoms
+    for i in jobn:
+        filename = './y_dir/%s/CONTCAR' %(i)
+        ASE_Atoms = read_vasp(filename)
+        latoms.append(ASE_Atoms)
+    return latoms
+
+
+def my_plot(fig_wh, fig_subp):
+    plt.rcParams['font.size']=8
+    #plt.rcParams['font.family'] = 'Arial'
+    plt.rcParams['axes.linewidth']=0.5
+    plt.rcParams['axes.grid']=True
+    plt.rcParams['grid.linestyle']='--'
+    plt.rcParams['grid.linewidth']=0.2
+    plt.rcParams["savefig.transparent"]='True'
+    plt.rcParams['lines.linewidth']=0.8
+    plt.rcParams['lines.markersize'] = 4
+ 
+    fig1, ax1 = plt.subplots(nrows=fig_subp[0], ncols=fig_subp[1], \
+    sharex=True, figsize=(fig_wh[0], fig_wh[1]) )
+    
+    return fig1, ax1
+
 
 
 
