@@ -10,10 +10,10 @@ fi
 d0=`pwd`
 
 sub_plot_all(){
-    workdir=$1
+    workdir="$1"
     mycmd=$2
-    echo "==> workdir: " $workdir
-    echo "==> mycmd: " $mycmd
+    echo "==> workdir: "  "$workdir:"
+    echo "==> mycmd: "     $mycmd
 
     for dirn in ` find ./  -type d  -name "$workdir" `; do
         cd $dirn
@@ -53,7 +53,7 @@ case "$1" in
     -GSFE)
         workdir=y_GSFE_*
         mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_GSFE.py
-        sub_plot_all  $workdir  $mycmd
+        sub_plot_all  "$workdir"  $mycmd
         ;;
 
     *) 
