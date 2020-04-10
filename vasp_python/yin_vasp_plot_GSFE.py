@@ -59,6 +59,7 @@ def check_constraints(Etot, latoms):
         dlatt = latoms[i].cell[:] - latoms[0].cell[:]
         temp = np.linalg.norm(dlatt[0:2, :])
         if temp > 1e-10:
+            print(dlatt)
             print('\n==> i, norm: {0}'.format([i, temp]) )
             sys.exit("==> ABORT: in-plane lattices relaxed. \n" )
     
@@ -67,9 +68,9 @@ def check_constraints(Etot, latoms):
         
         # check pos
         dpos = latoms[i].positions - latoms[0].positions
-        dposD = dpos @ np.linalg.inv(latoms[0].cell[:])
+        dposD = dpos @ np.linalg.inv(latoms[i].cell[:])
         dposD = dposD - np.around(dposD)  
-        dpos = dposD @ latoms[0].cell[:]
+        dpos = dposD @ latoms[i].cell[:]
 
         temp = np.linalg.norm(dpos[:,0:2])
         if temp > 1e-10:
