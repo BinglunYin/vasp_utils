@@ -36,6 +36,7 @@ main(){
     for dirn in $mylist; do
         echo -e "\n$dirn"
         cat $dirn/../y_post_time
+        grep "Your highest band" $dirn/../y_post_warning
     done
     echo " "
 }
