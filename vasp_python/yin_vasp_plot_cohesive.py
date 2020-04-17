@@ -6,6 +6,7 @@ from ase.io.vasp import read_vasp
 import yin_vasp_func as vf 
 import math    
 from scipy.interpolate import interp1d
+import sys
 
 
 jobn, Etot, Eent, pres = vf.vasp_read_post_data()
@@ -30,7 +31,6 @@ for i in np.arange(len(jobn)):
 
 # check
 if Etot.min() != Emin:
-    import sys
     sys.exit('Emin is wrong. Abort!')
 
 
@@ -39,7 +39,7 @@ if  Etot[-5:].std() > 5e-4 :
 
 Eatom = Etot[-1]
 
-Ecoh = Eatom - Emin
+Ecoh =  Emin - Eatom
 
 
 V = V0 * k**3
@@ -58,6 +58,19 @@ B0 = fB(V0)
 print('==> p0, B0:')
 print(p0, B0)
 
+
+latoms = vf.get_list_of_atoms()
+latoms2 = vf.get_list_of_outcar()
+
+magtot = np.array([])
+for i in np.arange(len(latoms)):
+    temp = latoms[i].get_volume()/natoms - V[i] 
+    if np.abs(temp) > 1e-10:
+        sys.exit('==> ABORT. wrong scaling. ')
+
+    magtot = np.append( magtot, latoms2[i].get_magnetic_moment()/natoms)
+    
+magtot = np.abs(magtot)
 
 
 #====================
@@ -95,36 +108,29 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-plt.rcParams['font.size']=8
-#plt.rcParams['font.family'] = 'Arial'
-plt.rcParams['axes.linewidth']=0.5
-plt.rcParams['axes.grid']=True
-plt.rcParams['grid.linestyle']='--'
-plt.rcParams['grid.linewidth']=0.2
-plt.rcParams["savefig.transparent"]='True'
-plt.rcParams['lines.linewidth']=0.8
-plt.rcParams['lines.markersize'] = 4/1.6
-
-fig_w = 3.15
-fig_h = 7
-
-fig1, ax1 = plt.subplots(nrows=3, ncols=1, \
-sharex=True, figsize=(fig_w, fig_h) )
-
-pos  = np.array([0.20, 0.70, 0.75, 0.27])
-dpos = np.array([0, -0.32, 0, 0])
-ax1[0].set_position(pos)
-ax1[1].set_position(pos+dpos)
-ax1[2].set_position(pos+dpos*2)
+fig_wh = [3.15, 9]
+fig_subp = [4, 1]
+fig1, ax1 = vf.my_plot(fig_wh, fig_subp)
 
 
-Elimu=math.ceil( Etot.max() /10) *10 
+fig_pos  = np.array([0.20, 0.77, 0.75, 0.205])
+fig_dpos = np.array([0, -0.24, 0, 0])
+ax1[0].set_position(fig_pos)
+ax1[1].set_position(fig_pos + fig_dpos)
+ax1[2].set_position(fig_pos + fig_dpos*2)
+ax1[3].set_position(fig_pos + fig_dpos*3)
+
+
 Elimd=math.floor( Etot.min()/10) *10 
+Elimu=-2*Elimd
 
 plim=-math.floor( p.min()/10) *10
 
 Blimu=math.ceil( B0*1.2 /50) *50 
 Blimd=math.floor( B.min()/50) *50 
+
+maglimu = math.ceil(magtot.max())
+maglimd = -0.1
 
 
 ax1[0].plot([1, 1], [Elimd, Elimu], '--k')
@@ -140,24 +146,30 @@ ax1[2].plot([1, 1], [Blimd, Blimu], '--k')
 ax1[2].plot((VB/V0)**(1/3), B, '-o')
 ax1[2].plot(1, B0, 's')
 
+ax1[3].plot([1, 1], [maglimd, maglimu], '--k')
+ax1[3].plot(k, magtot, '-o')
+
 
 ax1[0].set_ylim([Elimd, Elimu])
 ax1[1].set_ylim([-plim, plim])
 ax1[2].set_ylim([Blimd, Blimu])
+ax1[3].set_ylim([maglimd, maglimu])
 
 
 plt.setp(ax1[-1], xlabel='$a/a_0$')
-plt.setp(ax1[0],  ylabel='energy (eV/atom)')
-plt.setp(ax1[1],  ylabel='pressure (GPa)')
-plt.setp(ax1[2],  ylabel='B (GPa)')
+plt.setp(ax1[0],  ylabel='DFT energy (eV/atom)')
+plt.setp(ax1[1],  ylabel='Pressure (GPa)')
+plt.setp(ax1[2],  ylabel='Bulk modulus (GPa)')
+plt.setp(ax1[3],  ylabel='Net magnetic moment ($\\mu_B$/atom)')
 
 
 ax1[0].text(1.5, Elimd+(Elimu-Elimd)*0.6, \
-'$E_\mathrm{min}$ = %.4f eV \n$E_\mathrm{atom}$ = %.4f eV \n\n$E_\mathrm{coh}$ = %.4f eV '
-%(Emin, Eatom, Ecoh)  )
+'$E_\mathrm{min}$ = %.4f eV \n\
+$E_\mathrm{atom}$ = %.4f eV \n\
+$E_\mathrm{coh}$ = %.4f eV \n\n\
+$V_0$ = %.4f $\mathrm{\AA}^3$ '
+%(Emin, Eatom, Ecoh, V0)  )
 
-ax1[0].text(1.5, Elimd+(Elimu-Elimd)*0.3, \
-'$V_0$ = %.4f $\mathrm{\AA}^3$ ' %(V0)  )
 
 ax1[1].text(1.5, plim*0.4, \
 'from diff: \n$p_0$ = %.1f GPa ' %(p0)  )

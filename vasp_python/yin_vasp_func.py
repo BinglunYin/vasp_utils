@@ -2,8 +2,21 @@
 
 
 import numpy as np
-from ase.io.vasp import read_vasp
+from ase.io.vasp import read_vasp, read_vasp_out
 import matplotlib.pyplot as plt
+
+
+
+
+
+def get_list_of_outcar():
+    jobn, Etot, Eent, pres = vasp_read_post_data()
+    latoms2 = []   # list of ASE_Atoms from OUTCAR
+    for i in jobn:
+        filename = './y_dir/%s/OUTCAR' %(i)
+        atoms2 = read_vasp_out(filename)
+        latoms2.append(atoms2)
+    return latoms2
 
 
 
