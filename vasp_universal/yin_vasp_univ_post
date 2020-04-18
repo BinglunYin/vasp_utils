@@ -174,8 +174,8 @@ sub_post(){
     echo "|       un-relaxed jobs: " $ur
     echo -e "----------------------------------\n"
     
-    cat y_post_time
-    echo -e " "
+#    cat y_post_time
+#    echo -e " "
     
     ls -lshG $workdir/*/slurm-*
     echo -e " "
