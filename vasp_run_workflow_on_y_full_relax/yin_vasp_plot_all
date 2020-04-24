@@ -12,7 +12,7 @@ d0=`pwd`
 sub_plot_all(){
     workdir="$1"
     mycmd=$2
-    echo "==> workdir: "  "$workdir:"
+    echo "==> workdir: "  "$workdir"
     echo "==> mycmd: "     $mycmd
 
     for dirn in ` find ./  -type d  -name "$workdir" `; do
@@ -44,15 +44,15 @@ case "$1" in
 	sub_plot_all  $workdir  $mycmd 
         ;;
 
-    -Cij_stress) 
-        workdir=y_Cij_stress
-        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_Cij_stress.py
+    -cij_stress) 
+        workdir=y_cij_stress
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_cij_stress.py
 	sub_plot_all  $workdir  $mycmd 
         ;;
 
-    -GSFE)
-        workdir=y_GSFE_*
-        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_GSFE.py
+    -gsfe)
+        workdir=y_gsfe_*
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_gsfe.py
         sub_plot_all  "$workdir"  $mycmd
         ;;
 
