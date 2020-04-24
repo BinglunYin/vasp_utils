@@ -2,7 +2,7 @@
 
 
 import numpy as np
-import yin_vasp_func as vf 
+from myvasp import yin_vasp_func as vf 
 
 
 jobn, Etot, Eent, pres = vf.vasp_read_post_data()

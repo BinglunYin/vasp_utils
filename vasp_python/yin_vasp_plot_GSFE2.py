@@ -3,7 +3,7 @@
 
 import numpy as np
 # from ase.io.vasp import read_vasp
-import yin_vasp_func as vf 
+from myvasp import yin_vasp_func as vf 
 import sys
 
 
