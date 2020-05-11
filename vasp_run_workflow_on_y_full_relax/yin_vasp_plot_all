@@ -56,6 +56,12 @@ case "$1" in
         sub_plot_all  "$workdir"  $mycmd
         ;;
 
+    -surface)
+        workdir=y_surface_*
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_surface.py
+        sub_plot_all  "$workdir"  $mycmd
+        ;;
+
     *) 
         echo "==>  Option $1 not recognized. Abort!" 
         exit
