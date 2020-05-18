@@ -29,7 +29,7 @@ def main():
     
     #=========================
     write_output(Asf, jobn, gamma_s, da33)
-    plot_surface_energy(gamma_s, da33, dpos_all, latoms, jobn)
+    plot_output(gamma_s, da33, dpos_all, latoms, jobn)
 
 
 
@@ -101,7 +101,7 @@ def write_output(Asf, jobn, gamma_s, da33):
     njobs = gamma_s.shape[0]
     print(njobs)
        
-    f = open('y_post_surface.txt','w+')
+    f = open('y_post_decohesion.txt','w+')
     f.write('# VASP surface energy: \n' )
     
     f.write('\n%20s: %16.8f \n' %('Asf (Ang^2)', Asf) )
@@ -120,7 +120,7 @@ def write_output(Asf, jobn, gamma_s, da33):
 
 
 
-def plot_surface_energy(gamma_s, da33, dpos_all, latoms, jobn):
+def plot_output(gamma_s, da33, dpos_all, latoms, jobn):
     njobs = len(gamma_s)
     print(njobs)
 
@@ -135,7 +135,7 @@ def plot_surface_energy(gamma_s, da33, dpos_all, latoms, jobn):
     disp = da33.copy()
     xi = da33.copy()
 
-    ax1[0].plot(xi, gamma_s, '-o')   
+    ax1[0].plot(xi, gamma_s*2, '-o')   
       
     tau = np.diff(gamma_s*2) / np.diff(disp) *1e-2  #[GPa]
     x_tau = xi[0:-1].copy() + np.diff(xi)/2
@@ -149,16 +149,18 @@ def plot_surface_energy(gamma_s, da33, dpos_all, latoms, jobn):
     ax1[1].set_position(fig_pos + fig_dpos  )
 
     ax1[-1].set_xlabel('Vacuum layer thickness ($\mathrm{\\AA}$)')
-    ax1[0].set_ylabel('Surface energy $\\gamma_s$ (mJ/m$^2$)')
+    ax1[0].set_ylabel('Decohesion energy (mJ/m$^2$)')
     ax1[1].set_ylabel('Tensile stress $\\sigma$ (GPa)')
 
-    plt.savefig('y_post_surface.pdf')
+    plt.savefig('y_post_decohesion.pdf')
 
 
     #=====================
     fig_wh = [5, 5]
     fig_subp = [1, 1]
     fig2, ax2 = vf.my_plot(fig_wh, fig_subp)
+
+    anyplot=0
 
     xi = latoms[0].positions[:, 2]
     for i in np.arange(njobs):
@@ -172,12 +174,16 @@ def plot_surface_energy(gamma_s, da33, dpos_all, latoms, jobn):
             ax2.plot(temp2[:, -1], temp2[:, 1], '-s', label='%s-$u_2$' %(jobn[i]) )
             ax2.plot(temp2[:, -1], temp2[:, 2], '-^', label='%s-$u_3$' %(jobn[i]) )
 
-    ax2.legend(loc='lower center', ncol=3, framealpha=0.4)
+            anyplot = 1
+
+    if anyplot==1:
+        ax2.legend(loc='lower center', ncol=3, framealpha=0.4)
+    
     ax2.set_xlabel('Atom positions in $x_3$ ($\\mathrm{\\AA}$)')
     ax2.set_ylabel('Displacements $u_i$ ($\\mathrm{\\AA}$)')
     ax2.set_position([0.17, 0.10, 0.78, 0.86])
 
-    plt.savefig('y_post_surface.ui.pdf')
+    plt.savefig('y_post_decohesion.ui.pdf')
 
 
 
