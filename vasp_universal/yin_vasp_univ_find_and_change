@@ -19,7 +19,7 @@ sub_change(){
     file1=$1
     tag1=$2
     str1=$3
-    echo "==> changing '"$2"' in '"$1"' to '"$3"': "
+    echo "==> changing '"$tag1"' in '"$file1"' to '"$str1"': "
 
     for filen in `find ./ -type f -name $file1`; do
         echo $filen
@@ -53,52 +53,72 @@ case "$1" in
         ;;
 
 
+    -kp)
+        echo "==> changing kp in KPOINTS to" $2 ": "
+        for filen in ` find ./ -type f -name "KPOINTS" `; do
+            echo $filen
+            sed '4s/.*/'" $2"'/' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+
+
     -ispin) 
-        str=" ISPIN = $2      # 1=non; 2=spin "
-        sub_change  INCAR  ISPIN  "$str" 
+        str=" ISPIN= $2      # 1=non; 2=spin "
+        sub_change  INCAR  "ISPIN="  "$str" 
         ;;
 
 
     -isif) 
-        str=" ISIF = $2      # fix: 2=box; 3=none; 4=volume "
-        sub_change  INCAR  ISIF  "$str"
+        str=" ISIF= $2      # fix: 2=box; 3=none; 4=volume "
+        sub_change  INCAR  "ISIF="  "$str"
         ;;
 
 
     -ediffg) 
-        str=" EDIFFG = $2      # -1E-3 "
-        sub_change  INCAR  EDIFFG  "$str"
+        str=" EDIFFG= $2      # -1E-3 "
+        sub_change  INCAR  "EDIFFG="  "$str"
         ;;
 
 
     -ediff)
-        str=" EDIFF = $2      # 1E-6 "
-        sub_change  INCAR  EDIFF  "$str"
+        str=" EDIFF= $2      # 1E-6 "
+        sub_change  INCAR  "EDIFF="  "$str"
         ;;
 
 
     -isym) 
-        str=" ISYM = $2      # 0=off; 2=on "
-        sub_change  INCAR  ISYM  "$str"
+        str=" ISYM= $2      # 0=off; 2=on "
+        sub_change  INCAR  "ISYM="  "$str"
         ;;
 
 
     -nsw)
-        str=" NSW = $2      # ionic steps, 0=static "
-        sub_change  INCAR  NSW  "$str"
+        str=" NSW= $2      # ionic steps, 0=static "
+        sub_change  INCAR  "NSW="  "$str"
         ;;
 
 
     -algo)
-        str=" ALGO = $2      # N=Normal, F=Fast "
-        sub_change  INCAR  ALGO  "$str"
+        str=" ALGO= $2      # N=Normal, F=Fast "
+        sub_change  INCAR  "ALGO="  "$str"
         ;;
 
 
     -ismear)
-        str=" ISMEAR = $2      # 1=1st order MP, -5=tetrahedron "
-        sub_change  INCAR  ISMEAR  "$str"
+        str=" ISMEAR= $2      # 1=1st order MP, -5=tetrahedron "
+        sub_change  INCAR  "ISMEAR="  "$str"
         ;;
+
+
+    -lreal)
+        str=" LREAL= $2      # F; A=Auto "
+        sub_change  INCAR  "LREAL="  "$str"
+        ;;
+
+
 
 
     *)  echo "==>  Option $1 not recognized. Abort!" 
