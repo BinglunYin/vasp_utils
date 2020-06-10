@@ -24,12 +24,11 @@ sub_run_eos(){
 
     yin_vasp_univ_find_and_change  -isym  0 
     yin_vasp_univ_find_and_change  -isif  4
-#    yin_vasp_univ_find_and_change  -ediffg  -1E-3
 
     case "$1" in
         -elem) echo "==> run eos for elements "
             yin_slurm_find_and_change  -time  2          
-            yin_slurm_find_and_change  -partition  parallel    
+            yin_slurm_find_and_change  -partition  $my_slurm_partition
             ;;
         
         *) echo "==> run eos for supercell " 
@@ -68,8 +67,7 @@ sub_run_eos(){
 
         a0new=`echo "scale=16; $a0*$el" | bc`
 
-        sed '2s/.*/'"$a0new"'/' ./POSCAR > ./temp
-        mv ./temp ./POSCAR
+        yin_vasp_univ_find_and_change  -a0  $a0new        
 
         echo 'submit dir:' `pwd`
         sbatch sub.*

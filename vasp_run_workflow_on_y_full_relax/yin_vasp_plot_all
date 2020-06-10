@@ -20,7 +20,7 @@ sub_plot_all(){
         echo -e "\n==>" `pwd`
     
         yin_vasp_univ_post 
-        $mycmd
+        $HOME/opt/bin/python3  $mycmd
     
         cd $d0
     done
