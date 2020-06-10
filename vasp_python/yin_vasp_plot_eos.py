@@ -157,10 +157,10 @@ def write_output(V, Etot, fitres, V1, a1_pos, p_dft):
 
 
     f.write('\n%16s %16s %16s %16s\n' \
-    %('V (Ang^3)', 'Etot (eV)' , 'p_dft (GPa)', 'p_true-dft' ) )
+    %('V (Ang^3)', 'Etot (eV)' , 'p_dft (GPa)', 'p_dft-true' ) )
   
     for i in np.arange(len(V)):
-        temp = myeosp(fitres[:-1], V[i])*qe*1e21 - p_dft[i]
+        temp = p_dft[i] - myeosp(fitres[:-1], V[i])*qe*1e21 
         f.write('%16.8f %16.8f %16.8f %16.8f\n' \
         %(V[i], Etot[i], p_dft[i], temp) )
 
