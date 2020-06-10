@@ -53,7 +53,7 @@ def main():
         a1_pos = a1_pos.mean()
 
     write_output(V, Etot, fitres, V1, a1_pos, p_dft)
-    plot_eos(V, Etot, fitres, p_dft)
+    plot_eos(V, Etot, fitres, p_dft, V1)
 
 
     ASE_eos = EquationOfState(V, Etot, eos='birchmurnaghan')
@@ -161,14 +161,14 @@ def write_output(V, Etot, fitres, V1, a1_pos, p_dft):
   
     for i in np.arange(len(V)):
         temp = myeosp(fitres[:-1], V[i])*qe*1e21 - p_dft[i]
-        f.write('%16.8f %16.8f %16.8f  %16.8f\n' \
+        f.write('%16.8f %16.8f %16.8f %16.8f\n' \
         %(V[i], Etot[i], p_dft[i], temp) )
 
     f.close() 
 
 
 
-def plot_eos(V, Etot, fitres, p_dft):
+def plot_eos(V, Etot, fitres, p_dft, V1):
  
     qe = vf.phy_const('qe')
     E0 = fitres[0]
@@ -212,13 +212,19 @@ def plot_eos(V, Etot, fitres, p_dft):
     ax1[0].set_position(pos)
     ax1[1].set_position(pos +np.array([0, -0.45, 0, 0]) )
 
-    plt.setp(ax1[-1], xlabel='$V/V_0$')
-    plt.setp(ax1[0],  ylabel='$E-E_0$ (eV/atom)')
-    plt.setp(ax1[1],  ylabel='$p$ (GPa)')
+    plt.setp(ax1[-1], xlabel='Volume $V/V_0$')
+    plt.setp(ax1[0],  ylabel='Energy $E-E_0$ (eV/atom)')
+    plt.setp(ax1[1],  ylabel='Pressure $p$ (GPa)')
 
     ax1[0].text(xi[0]+(xi[-1]-xi[0])*0.2, yi1.max()*0.7, \
-    'E0 = %.4f eV/atom \nV0 = %.4f $\mathrm{\AA}^3$/atom \nB0 = %.2f GPa \n' 
+    '$E_0$ = %.4f eV/atom \n$V_0$ = %.4f $\mathrm{\AA}^3$/atom \n$B_0$ = %.2f GPa \n' 
     %(E0, V0, B0)  )
+
+    ax1[1].text(xi[0]+(xi[-1]-xi[0])*0.4, yi2.max()*0.7, \
+    '$p_\mathrm{Pulay} = p_\mathrm{DFT} - p_\mathrm{true}$\n$\\approx$ %.2f GPa' 
+    %( (V1/V0-1)*B0 )  )
+
+
 
     plt.savefig('y_post_eos.pdf')
 
