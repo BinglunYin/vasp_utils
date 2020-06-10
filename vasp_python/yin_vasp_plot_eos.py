@@ -37,10 +37,12 @@ def main():
     p_dft = np.array([])
 
     for i in np.arange(len(jobn)):
-        V1 = np.append( V1, V[i] / float(jobn[i]))
-        a1_pos = np.append( a1_pos, a_pos[i] / (float(jobn[i]))**(1/3) )
-     
         p_dft = np.append( p_dft, pres[i,0:2].mean()*(0.1) )  # pressure [GPa]
+        
+        if jobn[i][0] == '0' or jobn[i][0] == '1' :   
+            V1 = np.append( V1, V[i] / float(jobn[i]))
+            a1_pos = np.append( a1_pos, a_pos[i] / (float(jobn[i]))**(1/3) )
+     
     
     if (V1.std() > 1e-8) or (a1_pos.std() > 1e-8) :
         sys.exit('V1 or a1_pos is wrong. Abort!')
