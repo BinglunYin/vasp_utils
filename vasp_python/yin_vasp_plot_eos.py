@@ -10,25 +10,43 @@ import sys
 
 def main():
 
+    latoms = vf.get_list_of_atoms()
+    latoms2 = vf.get_list_of_outcar()
+
+    natoms = latoms[0].get_positions().shape[0]
+
+    V = np.array([]) 
+    ca = np.array([])
+    magtot = np.array([])
+
+    for i in np.arange(len(latoms)):
+        temp = latoms[i].get_volume()/natoms
+        V = np.append(V, temp) 
+        
+        temp = latoms[i].get_cell()[:]
+        temp = np.linalg.norm( temp[2,:] ) / np.linalg.norm( temp[0,:] ) 
+        ca = np.append(ca, temp) 
+
+
+        try:
+            temp = latoms2[i].get_magnetic_moment()/natoms
+        except:
+            temp = 0
+        magtot = np.append(magtot, temp)
+        
+    magtot = np.abs(magtot)
+
+
     jobn, Etot, Eent, pres = vf.vasp_read_post_data()
 
-    V = np.array([])
     a_pos = np.array([])  # scale in POSCAR
-
     for i in jobn:
         filename = './y_dir/%s/CONTCAR' %(i)
-
-        ASE_Atoms = read_vasp(filename)
-        natoms = ASE_Atoms.get_positions().shape[0]
-
-        V = np.append(V, np.linalg.det( ASE_Atoms.cell ) / natoms)
-
         with open(filename,'r') as f:
             a_pos = np.append( a_pos, float( f.readlines()[1] ) )
 
+ 
     Etot = Etot / natoms
-
-
     fitres = myfitting(V, Etot)
 
 
@@ -44,16 +62,14 @@ def main():
             a1_pos = np.append( a1_pos, a_pos[i] / (float(jobn[i]))**(1/3) )
      
     
-    if (V1.std() > 1e-8) or (a1_pos.std() > 1e-8) :
+    if (V1.std() > 1e-10) or (a1_pos.std() > 1e-10) :
         sys.exit('V1 or a1_pos is wrong. Abort!')
     else:
-        # print('==> std of V1 and a1_pos are small: ')
-        # print(V1.std(), a1_pos.std())
         V1 = V1.mean()
         a1_pos = a1_pos.mean()
 
     write_output(V, Etot, fitres, V1, a1_pos, p_dft)
-    plot_eos(V, Etot, fitres, p_dft, V1)
+    plot_eos(V, Etot, fitres, p_dft, V1, ca, magtot)
 
 
     ASE_eos = EquationOfState(V, Etot, eos='birchmurnaghan')
@@ -168,7 +184,7 @@ def write_output(V, Etot, fitres, V1, a1_pos, p_dft):
 
 
 
-def plot_eos(V, Etot, fitres, p_dft, V1):
+def plot_eos(V, Etot, fitres, p_dft, V1, ca, magtot):
  
     qe = vf.phy_const('qe')
     E0 = fitres[0]
@@ -181,24 +197,17 @@ def plot_eos(V, Etot, fitres, p_dft, V1):
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
-    plt.rcParams['font.size']=8
-    #plt.rcParams['font.family'] = 'Arial'
-    plt.rcParams['axes.linewidth']=0.5
-    plt.rcParams['axes.grid']=True
-    plt.rcParams['grid.linestyle']='--'
-    plt.rcParams['grid.linewidth']=0.2
-    plt.rcParams["savefig.transparent"]='True'
-    plt.rcParams['lines.linewidth']=0.8
-    plt.rcParams['lines.markersize'] = 4
- 
-
-    fig_w = 3.15
-    fig_h = 5
+    fig_wh = [3.15, 9]
+    fig_subp = [4, 1]
+    fig1, ax1 = vf.my_plot(fig_wh, fig_subp)
+     
+    fig_pos = np.array([0.23, 0.77, 0.70, 0.21])
+    fig_dpos = np.array([0, -0.235, 0, 0])
+    for i in np.arange(4):
+        ax1[i].set_position(fig_pos + i* fig_dpos)
+   
 
     xi=np.arange(V.min()/V0, V.max()/V0, 1e-4)
-
-    fig1, ax1 = plt.subplots(nrows=2, ncols=1, \
-    sharex=True, figsize=(fig_w, fig_h) )
 
     ax1[0].plot(V/V0, (Etot-E0), 'o')
     yi1 = myeqn(fitres[:-1], xi*V0) -E0
@@ -208,13 +217,18 @@ def plot_eos(V, Etot, fitres, p_dft, V1):
     yi2 = myeosp(fitres[:-1], xi*V0) *qe*1e21   #[GPa]
     ax1[1].plot(xi, yi2, '-')
 
-    pos=np.array([0.23, 0.55, 0.70, 0.4])
-    ax1[0].set_position(pos)
-    ax1[1].set_position(pos +np.array([0, -0.45, 0, 0]) )
+    ax1[2].plot(V/V0, ca, 'o')
+    
+    ax1[3].plot(V/V0, magtot, 'o')
+    ax1[3].set_ylim([-0.1, np.ceil(magtot.max()+1e-6)])
+
 
     plt.setp(ax1[-1], xlabel='Volume $V/V_0$')
     plt.setp(ax1[0],  ylabel='Energy $E-E_0$ (eV/atom)')
     plt.setp(ax1[1],  ylabel='Pressure $p$ (GPa)')
+    plt.setp(ax1[2],  ylabel='$c/a$')
+    plt.setp(ax1[3],  ylabel='Net magnetic moment ($\\mu_B$/atom)')
+
 
     ax1[0].text(xi[0]+(xi[-1]-xi[0])*0.2, yi1.max()*0.7, \
     '$E_0$ = %.4f eV/atom \n$V_0$ = %.4f $\mathrm{\AA}^3$/atom \n$B_0$ = %.2f GPa \n' 
