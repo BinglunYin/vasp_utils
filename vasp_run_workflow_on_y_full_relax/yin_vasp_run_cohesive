@@ -25,10 +25,9 @@ sub_run_cohesive(){
     yin_vasp_univ_find_and_change  -nsw  0
     yin_vasp_univ_find_and_change  -algo  N
     yin_vasp_univ_find_and_change  -ediff  1E-6
-    yin_vasp_univ_find_and_change  -ismear  -5
 
     yin_slurm_find_and_change  -time  2          
-    yin_slurm_find_and_change  -partition  parallel    
+    yin_slurm_find_and_change  -partition  $my_slurm_partition    
 
     cd ..
    

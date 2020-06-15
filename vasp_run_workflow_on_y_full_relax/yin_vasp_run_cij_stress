@@ -32,7 +32,7 @@ sub_run_Cij(){
     case "$1" in
         -elem) echo "==> run Cij for elements "
             yin_slurm_find_and_change  -time  2          
-            yin_slurm_find_and_change  -partition  parallel    
+            yin_slurm_find_and_change  -partition  $my_slurm_partition 
             ;;
         
         *) echo "==> run Cij for supercell " 
