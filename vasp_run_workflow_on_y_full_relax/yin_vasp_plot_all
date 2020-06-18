@@ -34,33 +34,43 @@ case "$1" in
     -eos) 
         workdir=y_eos
         mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_eos.py
-	sub_plot_all  $workdir  $mycmd 
+	    sub_plot_all  $workdir  $mycmd 
         ;;
 
 	
     -cohesive) 
         workdir=y_cohesive
         mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_cohesive.py
-	sub_plot_all  $workdir  $mycmd 
+	    sub_plot_all  $workdir  $mycmd 
         ;;
 
     -cij_stress) 
         workdir=y_cij_stress
         mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_cij_stress.py
-	sub_plot_all  $workdir  $mycmd 
+	    sub_plot_all  $workdir  $mycmd 
+        ;;
+
+
+
+    -planar)
+        workdir=y_planar_relaxed_*
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_planar_relaxed.py
+        sub_plot_all  "$workdir"  $mycmd
         ;;
 
     -gsfe)
-        workdir=y_gsfe_*
-        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_gsfe.py
+        workdir=y_planar_gsfe_*
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_planar_gsfe.py
         sub_plot_all  "$workdir"  $mycmd
         ;;
 
     -decohesion)
-        workdir=y_decohesion_*
-        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_decohesion.py
+        workdir=y_planar_decohesion_*
+        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_planar_decohesion.py
         sub_plot_all  "$workdir"  $mycmd
         ;;
+
+    
 
     *) 
         echo "==>  Option $1 not recognized. Abort!" 
