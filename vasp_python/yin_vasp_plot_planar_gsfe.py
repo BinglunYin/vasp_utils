@@ -119,7 +119,7 @@ def write_output(Asf, a11, a22, sf, usf, jobn, gamma, da3):
     njobs = gamma.shape[0]
     print(njobs)
        
-    f = open('y_post_GSFE.txt','w+')
+    f = open('y_post_planar_gsfe.txt','w+')
     f.write('# VASP GSFE: \n' )
     
     f.write('\n%20s: %16.8f \n' %('Asf (Ang^2)', Asf) )
@@ -193,7 +193,7 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
     ax1[-1].set_xticks( np.arange(0, xi.max()+dxi, dxi ) )
 
 
-    plt.savefig('y_post_GSFE.pdf')
+    plt.savefig('y_post_planar_gsfe.pdf')
 
 
     #=====================
@@ -214,7 +214,7 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
     ax2.set_ylabel('Displacement $u_3$ ($\\mathrm{\\AA}$)')
     ax2.set_position([0.17, 0.10, 0.78, 0.86])
 
-    plt.savefig('y_post_GSFE.u3.pdf')
+    plt.savefig('y_post_planar_gsfe.u3.pdf')
 
 
 

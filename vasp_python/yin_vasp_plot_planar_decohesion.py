@@ -101,7 +101,7 @@ def write_output(Asf, jobn, gamma_s, da33):
     njobs = gamma_s.shape[0]
     print(njobs)
        
-    f = open('y_post_decohesion.txt','w+')
+    f = open('y_post_planar_decohesion.txt','w+')
     f.write('# VASP surface energy: \n' )
     
     f.write('\n%20s: %16.8f \n' %('Asf (Ang^2)', Asf) )
@@ -152,38 +152,38 @@ def plot_output(gamma_s, da33, dpos_all, latoms, jobn):
     ax1[0].set_ylabel('Decohesion energy (mJ/m$^2$)')
     ax1[1].set_ylabel('Tensile stress $\\sigma$ (GPa)')
 
-    plt.savefig('y_post_decohesion.pdf')
+    plt.savefig('y_post_planar_decohesion.pdf')
 
 
     #=====================
-    fig_wh = [5, 5]
-    fig_subp = [1, 1]
-    fig2, ax2 = vf.my_plot(fig_wh, fig_subp)
+    # fig_wh = [5, 5]
+    # fig_subp = [1, 1]
+    # fig2, ax2 = vf.my_plot(fig_wh, fig_subp)
 
-    anyplot=0
+    # anyplot=0
 
-    xi = latoms[0].positions[:, 2]
-    for i in np.arange(njobs):
+    # xi = latoms[0].positions[:, 2]
+    # for i in np.arange(njobs):
 
-        if np.linalg.norm( dpos_all[i, :] ) > 1e-10:
-            temp = np.hstack([ dpos_all[i, :], xi[:, np.newaxis] ])
-            ind = np.argsort(temp[:, -1])
-            temp2 = temp[ind, :]
+    #     if np.linalg.norm( dpos_all[i, :] ) > 1e-10:
+    #         temp = np.hstack([ dpos_all[i, :], xi[:, np.newaxis] ])
+    #         ind = np.argsort(temp[:, -1])
+    #         temp2 = temp[ind, :]
     
-            ax2.plot(temp2[:, -1], temp2[:, 0], '-o', label='%s-$u_1$' %(jobn[i]) )
-            ax2.plot(temp2[:, -1], temp2[:, 1], '-s', label='%s-$u_2$' %(jobn[i]) )
-            ax2.plot(temp2[:, -1], temp2[:, 2], '-^', label='%s-$u_3$' %(jobn[i]) )
+    #         ax2.plot(temp2[:, -1], temp2[:, 0], '-o', label='%s-$u_1$' %(jobn[i]) )
+    #         ax2.plot(temp2[:, -1], temp2[:, 1], '-s', label='%s-$u_2$' %(jobn[i]) )
+    #         ax2.plot(temp2[:, -1], temp2[:, 2], '-^', label='%s-$u_3$' %(jobn[i]) )
 
-            anyplot = 1
+    #         anyplot = 1
 
-    if anyplot==1:
-        ax2.legend(loc='lower center', ncol=3, framealpha=0.4)
+    # if anyplot==1:
+    #     ax2.legend(loc='lower center', ncol=3, framealpha=0.4)
     
-    ax2.set_xlabel('Atom positions in $x_3$ ($\\mathrm{\\AA}$)')
-    ax2.set_ylabel('Displacements $u_i$ ($\\mathrm{\\AA}$)')
-    ax2.set_position([0.17, 0.10, 0.78, 0.86])
+    # ax2.set_xlabel('Atom positions in $x_3$ ($\\mathrm{\\AA}$)')
+    # ax2.set_ylabel('Displacements $u_i$ ($\\mathrm{\\AA}$)')
+    # ax2.set_position([0.17, 0.10, 0.78, 0.86])
 
-    plt.savefig('y_post_decohesion.ui.pdf')
+    # plt.savefig('y_post_decohesion.ui.pdf')
 
 
 
