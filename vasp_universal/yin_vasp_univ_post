@@ -102,8 +102,8 @@ sub_post(){
         
         #--------------------
  
-        jv=`grep volume    $resdir/OUTCAR      | tail -1 | awk '{printf $5}'`
-        jp=`grep pressure  $resdir/OUTCAR      | tail -1 | awk '{printf $4}'`
+        jv=`grep "volume of cell"     $resdir/OUTCAR      | tail -1 | awk '{printf $5}'`
+        jp=`grep "external pressure"  $resdir/OUTCAR      | tail -1 | awk '{printf $4}'`
         jF=`grep -A1 norm  $resdir/y_max_force | tail -1 | awk '{printf $2}'`
         
         echo -e $i1"\t"$jv"\t"$jp"\t"$jF >> ./y_post_data_2
