@@ -30,6 +30,9 @@ def main():
         np.cross(latoms[ibulk].cell[0, :], latoms[ibulk].cell[1, :] ) )
     a11 = latoms[ibulk].cell[0, 0]
     a22 = latoms[ibulk].cell[1, 1]
+    
+    natoms = latoms[ibulk].get_positions().shape[0]
+    E0bulk = Etot[ibulk]/natoms
 
     if np.abs( Asf-a11*a22 ) > 1e-10:
         sys.exit('ABORT: wrong Asf. ')
@@ -40,7 +43,7 @@ def main():
     gamma = dE/Asf *qe*1e23   #[mJ/m^2]
     
     #=========================
-    write_output(Asf, a11, a22, jobn, gamma, da3)
+    write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3)
     plot_output(jobn, latoms, dpos_all, ibulk)
 
 
@@ -104,7 +107,7 @@ def check_constraints(Etot, latoms, ibulk):
 
    
 
-def write_output(Asf, a11, a22, jobn, gamma, da3):
+def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3):
     njobs = gamma.shape[0]
     print('njobs:', njobs)
        
@@ -113,20 +116,21 @@ def write_output(Asf, a11, a22, jobn, gamma, da3):
     f.write('# gamma = dE/Asf \n' )
 
 
-    f.write('\n%16s %16s %16s \n' \
-        %('Asf (Ang^2)', 'a11 (Ang)', 'a22 (Ang)' ) )
-    f.write('%16.8f %16.8f %16.8f \n' \
-        %(Asf, a11, a22 ))
+    f.write('\n%16s %16s %16s %16s \n' \
+        %('Asf (Ang^2)', 'a11 (Ang)', 'a22 (Ang)', 'E0_bulk (eV)' ) )
+    f.write('%16.8f %16.8f %16.8f %16.8f \n' \
+        %(Asf, a11, a22, E0bulk ))
 
-    f.write('\n%10s %16s %16s %10s %10s %10s %10s \n' \
-        %('jobname', 'gamma (mJ/m^2)', 'gamma/2', 
+
+    f.write('\n%10s %10s %16s %10s %10s %10s %10s %10s \n' \
+        %('jobname', 'dE (eV)', 'gamma (mJ/m^2)', 'gamma/2', 
           'da31/a11', 'da32/a22', 'slip (Ang)', 
           'da33 (Ang)'
           ))
     
     for i in np.arange(njobs):
-        f.write('%10s %16.8f %16.8f %10.4f %10.4f %10.4f %10.4f \n' \
-            %(jobn[i], gamma[i], gamma[i]/2,
+        f.write('%10s %10.4f %16.8f %10.4f %10.4f %10.4f %10.4f %10.4f \n' \
+            %(jobn[i], dE[i], gamma[i], gamma[i]/2,
               da3[i, 0]/a11, da3[i, 1]/a22, np.linalg.norm(da3[i, 0:2]),  
               da3[i, 2] 
               ))
