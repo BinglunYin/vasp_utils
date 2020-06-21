@@ -15,22 +15,37 @@ def main():
     if njobs < 1.5:
         sys.exit('==> ABORT! more structures needed. ')
 
-    if jobn[0] != '00':
+    if jobn[0] != '0.00':
         sys.exit('==> ABORT! no reference state. ')
         
     latoms = vf.get_list_of_atoms()
     
     Asf = np.linalg.norm( \
         np.cross(latoms[0].cell[0, :], latoms[0].cell[1, :] ) )
+
+    a11 = latoms[0].cell[0, 0]
+    a22 = latoms[0].cell[1, 1]
+    
+    natoms = latoms[0].get_positions().shape[0]    
+    E0bulk = Etot[0] / natoms
+
+
+    dE, da33 = check_constraints(Etot, latoms)
    
-    dE, da33, dpos_all = check_constraints(Etot, latoms)
-   
-    gamma_s = dE/2/Asf *qe*1e23   #[mJ/m^2]
+    # check jobname
+    k = np.array([])
+    for i in np.arange(len(jobn)):
+        k = np.append(k, float(jobn[i]) )
+     
+    if np.linalg.norm( k - da33 ) > 1e-10:
+        sys.exit('==> ABORT. wrong jobname. ')
+
+
+    gamma = dE/Asf *qe*1e23   #[mJ/m^2]
     
     #=========================
-    write_output(Asf, jobn, gamma_s, da33)
-    plot_output(gamma_s, da33, dpos_all, latoms, jobn)
-
+    write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da33)
+    plot_output(gamma, da33)
 
 
 
@@ -45,29 +60,27 @@ def check_constraints(Etot, latoms):
 
     dE = np.array([])
     da33 = np.array([])
-    dpos_all = np.zeros([1, natoms, 3])
-    
+
     for i in np.arange(njobs):
         dE = np.append(dE, Etot[i]-Etot[0])
     
+
         # check latt 
         dlatt = latoms[i].cell[:] - latoms[0].cell[:]
 
-        temp = dlatt[0:2, :].copy()
-        temp2 = np.linalg.norm(temp)
-        if temp2 > 1e-10:
+        temp  = dlatt[0:2, :].copy()
+        temp2 = dlatt[2, 0:2].copy()
+
+        temp  = np.linalg.norm(temp)
+        temp2 = np.linalg.norm(temp2)
+
+        if temp > 1e-10 or temp2 > 1e-10:
             print('dlatt:', dlatt)
-            print('\n==> i, norm: {0}'.format([i, temp2]) )
-            sys.exit("==> ABORT: in-plane lattices changed. \n" )
+            print(i, temp, temp2)
+            sys.exit("==> ABORT: lattices wrong. \n" )
     
-        temp = dlatt[2, 0:2].copy()
-        temp2 = np.linalg.norm(temp)
-        if temp2 > 1e-10:
-            print('\n==> i, norm: {0}'.format([i, temp2]) )
-            print('==> WARNING: a31, a32 changed. \n' )
-    
-        temp = dlatt[2,2].copy()
-        da33 = np.append( da33, temp )
+        da33 = np.append( da33, dlatt[2,2] )
+
         
         # check pos
         dpos = latoms[i].positions - latoms[0].positions
@@ -75,43 +88,45 @@ def check_constraints(Etot, latoms):
         dposD = dposD - np.around(dposD)  
         dpos = dposD @ latoms[i].cell[:]
 
-        temp = dpos.copy()
-        for j in np.arange(3):
-            temp[:,j] = temp[:,j] - temp[:,j].mean()
-        dpos_all = np.vstack([ dpos_all, temp[np.newaxis, :] ])
-        
-      
-    dpos_all = np.delete(dpos_all, 0, 0)
+        temp = np.linalg.norm(dpos)
+        if temp > 1e-10:
+            print('dpos:', dpos)
+            print('\n==> i, norm: {0}'.format([i, temp]) )
+            sys.exit("==> ABORT: positions changed. \n" )
     
-    if (dE.shape[0] != njobs)  \
-        or (len(da33) != njobs)  \
-        or (dpos_all.shape[0] != njobs) \
-        or (dpos_all.shape[1] != natoms) \
-        or (dpos_all.shape[2] != 3) :
+    
+    if (dE.shape[0] != njobs):
         sys.exit("==> ABORT: wrong dimensions. \n" )
    
-    return dE, da33, dpos_all
+    return dE, da33
 
 
 
 
    
 
-def write_output(Asf, jobn, gamma_s, da33):
-    njobs = gamma_s.shape[0]
+def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da33):
+    njobs = gamma.shape[0]
     print(njobs)
        
     f = open('y_post_planar_decohesion.txt','w+')
-    f.write('# VASP surface energy: \n' )
-    
-    f.write('\n%20s: %16.8f \n' %('Asf (Ang^2)', Asf) )
+    f.write('# VASP decohesion: \n' )
+    f.write('# gamma = dE/Asf \n' )
+
+    f.write('\n%16s %16s %16s %16s \n' \
+        %('Asf (Ang^2)', 'a11 (Ang)', 'a22 (Ang)', 'E0_bulk (eV)' ) )
+    f.write('%16.8f %16.8f %16.8f %16.8f \n' \
+        %(Asf, a11, a22, E0bulk ))
+
         
-    f.write('\n%5s %16s %12s \n' \
-        %('jobn', 'gamma_s (mJ/m^2)', 'da33 (Ang)') )
+    f.write('\n%10s %10s %16s %10s %10s \n' \
+        %('jobname', 'dE (eV)', 'gamma (mJ/m^2)', 'gamma/2', 
+          'da33 (Ang)'  ))
     
     for i in np.arange(njobs):
-        f.write('%5s %16.8f %12.8f \n' \
-            %(jobn[i], gamma_s[i], da33[i] ))
+        f.write('%10s %10.4f %16.8f %10.4f %10.4f \n' \
+            %(jobn[i], dE[i], gamma[i], gamma[i]/2,
+            da33[i] ))
 
     f.write(' \n')
     f.close() 
@@ -120,8 +135,8 @@ def write_output(Asf, jobn, gamma_s, da33):
 
 
 
-def plot_output(gamma_s, da33, dpos_all, latoms, jobn):
-    njobs = len(gamma_s)
+def plot_output(gamma, da33):
+    njobs = len(gamma)
     print(njobs)
 
     import matplotlib
@@ -135,12 +150,12 @@ def plot_output(gamma_s, da33, dpos_all, latoms, jobn):
     disp = da33.copy()
     xi = da33.copy()
 
-    ax1[0].plot(xi, gamma_s*2, '-o')   
+    ax1[0].plot(xi, gamma, '-o')   
       
-    tau = np.diff(gamma_s*2) / np.diff(disp) *1e-2  #[GPa]
+    tau = np.diff(gamma) / np.diff(disp) *1e-2  #[GPa]
     x_tau = xi[0:-1].copy() + np.diff(xi)/2
     ax1[1].plot(x_tau, tau, '-o')
-    ax1[1].plot([xi.min(), xi.max()], [0, 0], '--k')
+
 
     fig_pos  = np.array([0.23, 0.57, 0.70, 0.40])
     fig_dpos = np.array([0, -0.45, 0, 0])
@@ -148,43 +163,25 @@ def plot_output(gamma_s, da33, dpos_all, latoms, jobn):
     ax1[0].set_position(fig_pos)
     ax1[1].set_position(fig_pos + fig_dpos  )
 
-    ax1[-1].set_xlabel('Vacuum layer thickness ($\mathrm{\\AA}$)')
+    ax1[-1].set_xlabel('Vacuum layer thickness ($\\mathrm{\\AA}$)')
     ax1[0].set_ylabel('Decohesion energy (mJ/m$^2$)')
     ax1[1].set_ylabel('Tensile stress $\\sigma$ (GPa)')
+
+    ax1[0].text(4, gamma.max()/2, \
+        '$\\gamma_\\mathrm{surf}^\\mathrm{unrelaxed}$ \n= %.1f mJ/m$^2$' %( gamma[-1]/2 ))
+
+    ax1[1].text(4, tau.max()/2, \
+        '$\\sigma_\\mathrm{max}$ \n= %.1f GPa' %( tau.max() ))
+
 
     plt.savefig('y_post_planar_decohesion.pdf')
 
 
-    #=====================
-    # fig_wh = [5, 5]
-    # fig_subp = [1, 1]
-    # fig2, ax2 = vf.my_plot(fig_wh, fig_subp)
-
-    # anyplot=0
-
-    # xi = latoms[0].positions[:, 2]
-    # for i in np.arange(njobs):
-
-    #     if np.linalg.norm( dpos_all[i, :] ) > 1e-10:
-    #         temp = np.hstack([ dpos_all[i, :], xi[:, np.newaxis] ])
-    #         ind = np.argsort(temp[:, -1])
-    #         temp2 = temp[ind, :]
+       
     
-    #         ax2.plot(temp2[:, -1], temp2[:, 0], '-o', label='%s-$u_1$' %(jobn[i]) )
-    #         ax2.plot(temp2[:, -1], temp2[:, 1], '-s', label='%s-$u_2$' %(jobn[i]) )
-    #         ax2.plot(temp2[:, -1], temp2[:, 2], '-^', label='%s-$u_3$' %(jobn[i]) )
-
-    #         anyplot = 1
-
-    # if anyplot==1:
-    #     ax2.legend(loc='lower center', ncol=3, framealpha=0.4)
-    
-    # ax2.set_xlabel('Atom positions in $x_3$ ($\\mathrm{\\AA}$)')
-    # ax2.set_ylabel('Displacements $u_i$ ($\\mathrm{\\AA}$)')
-    # ax2.set_position([0.17, 0.10, 0.78, 0.86])
-
-    # plt.savefig('y_post_decohesion.ui.pdf')
-
 
 
 main()
+
+
+

@@ -55,7 +55,7 @@ sub_run_decohesion(){
 
  
     #=====================
-    N1=36
+    N1=38
     echo "N1: " $N1
     
     for ((i1=0; i1<=$N1; i1=i1+1)) ; do
