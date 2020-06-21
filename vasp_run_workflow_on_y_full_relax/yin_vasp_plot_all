@@ -65,7 +65,7 @@ case "$1" in
         ;;
 
     -decohesion)
-        workdir=y_planar_decohesion_*
+        workdir=y_planar_decohesion
         mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_planar_decohesion.py
         sub_plot_all  "$workdir"  $mycmd
         ;;
