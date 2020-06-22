@@ -44,7 +44,7 @@ sub_run_decohesion(){
     
    
  
-    workdir="./y_planar_decohesion"  
+    workdir="./y_decohesion"  
     rm -rI $workdir
     mkdir  $workdir
     cd     $workdir

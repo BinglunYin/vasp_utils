@@ -109,7 +109,7 @@ def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da33):
     njobs = gamma.shape[0]
     print(njobs)
        
-    f = open('y_post_planar_decohesion.txt','w+')
+    f = open('y_post_decohesion.txt','w+')
     f.write('# VASP decohesion: \n' )
     f.write('# gamma = dE/Asf \n' )
 
@@ -174,7 +174,7 @@ def plot_output(gamma, da33):
         '$\\sigma_\\mathrm{max}$ \n= %.1f GPa' %( tau.max() ))
 
 
-    plt.savefig('y_post_planar_decohesion.pdf')
+    plt.savefig('y_post_decohesion.pdf')
 
 
        

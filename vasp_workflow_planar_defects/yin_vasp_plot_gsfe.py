@@ -2,7 +2,6 @@
 
 
 import numpy as np
-# from ase.io.vasp import read_vasp
 from myvasp import vasp_func as vf 
 import sys
 
@@ -25,15 +24,18 @@ def main():
         np.cross(latoms[0].cell[0, :], latoms[0].cell[1, :] ) )
     a11 = latoms[0].cell[0, 0]
     a22 = latoms[0].cell[1, 1]
-    # natoms = latoms[0].positions.shape[0]
-    
+
+    natoms = latoms[0].get_positions().shape[0]    
+    E0bulk = Etot[0] / natoms
+
+
     dE, da3, dpos3 = check_constraints(Etot, latoms)
    
     gamma = dE/Asf *qe*1e23   
     sf, usf = find_sf_usf(gamma)
     
     #=========================
-    write_output(Asf, a11, a22, sf, usf, jobn, gamma, da3)
+    write_output(Asf, a11, a22, E0bulk, sf, usf, jobn, dE, gamma, da3)
     plot_GSFE(jobn, gamma, da3, dpos3, latoms)
 
 
@@ -46,7 +48,7 @@ def main():
 def check_constraints(Etot, latoms):
     njobs = len(latoms)
     natoms = latoms[0].positions.shape[0]
-    print(njobs, natoms)
+    print('njobs, natoms:', njobs, natoms)
 
     dE = np.array([])
     da3 = np.zeros([1, 3])
@@ -59,13 +61,14 @@ def check_constraints(Etot, latoms):
         dlatt = latoms[i].cell[:] - latoms[0].cell[:]
         temp = np.linalg.norm(dlatt[0:2, :])
         if temp > 1e-10:
-            print(dlatt)
+            print('dlatt:', dlatt)
             print('\n==> i, norm: {0}'.format([i, temp]) )
             sys.exit("==> ABORT: in-plane lattices relaxed. \n" )
     
         temp = dlatt[2,:].copy()
         da3 = np.vstack([ da3, temp[np.newaxis,:] ])
         
+
         # check pos
         dpos = latoms[i].positions - latoms[0].positions
         dposD = dpos @ np.linalg.inv(latoms[i].cell[:])
@@ -74,7 +77,7 @@ def check_constraints(Etot, latoms):
 
         temp = np.linalg.norm(dpos[:,0:2])
         if temp > 1e-10:
-            print(dpos)
+            print('dpos', dpos)
             print('\n==> i, norm: {0}'.format([i, temp]) )
             sys.exit("==> ABORT: atoms show in-plane relaxation. \n" )
     
@@ -86,12 +89,14 @@ def check_constraints(Etot, latoms):
     dpos3 = np.delete(dpos3, 0, 0)
     
     if (dE.shape[0] != njobs)  \
-        or (da3.shape[0] != njobs) or (da3.shape[1] != 3) \
-        or (dpos3.shape[0] != njobs) or (dpos3.shape[1] != natoms):
+        or (da3.shape[0] != njobs) \
+        or (da3.shape[1] != 3) \
+        or (dpos3.shape[0] != njobs) \
+        or (dpos3.shape[1] != natoms):
         sys.exit("==> ABORT: wrong dimensions. \n" )
 
     for i in np.arange(njobs):
-        temp = np.abs(da3[i, 1]*da3[1, 0] - da3[i, 0]*da3[1, 1])
+        temp = np.abs(da3[i, 1]*da3[1, 0] - da3[1, 1]*da3[i, 0])
         if temp > 1e-10:
             print('\n==> i, norm: {0}'.format([i, temp]) )
             sys.exit("==> ABORT: slip is not along a line. \n" )
@@ -115,14 +120,20 @@ def find_sf_usf(gamma):
 
    
 
-def write_output(Asf, a11, a22, sf, usf, jobn, gamma, da3):
+def write_output(Asf, a11, a22, E0bulk, sf, usf, jobn, dE, gamma, da3):
     njobs = gamma.shape[0]
     print(njobs)
        
-    f = open('y_post_planar_gsfe.txt','w+')
+    f = open('y_post_gsfe.txt','w+')
     f.write('# VASP GSFE: \n' )
-    
-    f.write('\n%20s: %16.8f \n' %('Asf (Ang^2)', Asf) )
+    f.write('# gamma = dE/Asf \n' )
+
+
+    f.write('\n%16s %16s %16s %16s \n' \
+        %('Asf (Ang^2)', 'a11 (Ang)', 'a22 (Ang)', 'E0_bulk (eV)' ) )
+    f.write('%16.8f %16.8f %16.8f %16.8f \n\n' \
+        %(Asf, a11, a22, E0bulk ))
+
 
     if sf.shape[0] > 0.5 :
         f.write('%20s: %16.8f \n' %('local min (mJ/m^2)', sf.min() ) )
@@ -131,16 +142,18 @@ def write_output(Asf, a11, a22, sf, usf, jobn, gamma, da3):
         f.write('%20s: %16.8f \n' %('local max (mJ/m^2)', usf.min() ) )
         
         
-    f.write('\n%5s %16s %12s %10s %10s %10s \n' \
-        %('jobn', 'gamma (mJ/m^2)', 
-        'da33 (Ang)', 'da31/a11', 'da32/a22',
-        'slip (Ang)' ) )
+    f.write('\n%10s %10s %16s %10s %10s %10s %10s \n' \
+        %('jobn', 'dE (eV)', 'gamma (mJ/m^2)', 
+        'da31/a11', 'da32/a22', 'slip (Ang)',
+        'da33 (Ang)'  
+        ))
     
     for i in np.arange(njobs):
-        f.write('%5s %16.8f %12.8f %10.4f %10.4f %10.4f \n' \
-            %(jobn[i], gamma[i], 
-            da3[i, 2], da3[i, 0]/a11,  da3[i, 1]/a22, 
-            np.linalg.norm(da3[i, 0:2])  ))
+        f.write('%10s %10.4f %16.8f %10.4f %10.4f %10.4f %10.4f \n' \
+            %(jobn[i], dE[i], gamma[i], 
+            da3[i, 0]/a11,  da3[i, 1]/a22, np.linalg.norm(da3[i, 0:2]),
+            da3[i, 2] 
+            ))
 
     f.write(' \n')
     f.close() 
@@ -180,20 +193,19 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
     fig_pos  = np.array([0.22, 0.70, 0.70, 0.28])
     fig_dpos = np.array([0, -0.31, 0, 0])
 
-    ax1[0].set_position(fig_pos)
-    ax1[1].set_position(fig_pos + fig_dpos  )
-    ax1[2].set_position(fig_pos + fig_dpos*2)
-
+    for i in np.arange(3):
+        ax1[i].set_position(fig_pos + i*fig_dpos)
+    
     ax1[-1].set_xlabel('Normalized slip vector')
-    ax1[0].set_ylabel('GSFE $\\gamma$ (mJ/m$^2$)')
-    ax1[1].set_ylabel('Inelastic normal displacement $\\Delta_n$ ($\\mathrm{\\AA}$)')
-    ax1[2].set_ylabel('Shear stress $\\tau$ (GPa)')
+    ax1[0].set_ylabel('GSFE (mJ/m$^2$)')
+    ax1[1].set_ylabel('Inelastic normal displacement ($\\mathrm{\\AA}$)')
+    ax1[2].set_ylabel('Shear stress (GPa)')
 
     dxi = np.around( xi.max()/6, 1)
     ax1[-1].set_xticks( np.arange(0, xi.max()+dxi, dxi ) )
 
 
-    plt.savefig('y_post_planar_gsfe.pdf')
+    plt.savefig('y_post_gsfe.pdf')
 
 
     #=====================
@@ -214,7 +226,7 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
     ax2.set_ylabel('Displacement $u_3$ ($\\mathrm{\\AA}$)')
     ax2.set_position([0.17, 0.10, 0.78, 0.86])
 
-    plt.savefig('y_post_planar_gsfe.u3.pdf')
+    plt.savefig('y_post_gsfe.u3.pdf')
 
 
 
