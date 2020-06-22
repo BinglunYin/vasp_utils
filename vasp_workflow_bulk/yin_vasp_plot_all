@@ -54,19 +54,19 @@ case "$1" in
 
     -planar)
         workdir=y_planar_relaxed_*
-        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_planar_relaxed.py
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_planar_defects/yin_vasp_plot_planar_relaxed.py
         sub_plot_all  "$workdir"  $mycmd
         ;;
 
     -gsfe)
-        workdir=y_planar_gsfe_*
-        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_planar_gsfe.py
+        workdir=y_gsfe_*
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_planar_defects/yin_vasp_plot_gsfe.py
         sub_plot_all  "$workdir"  $mycmd
         ;;
 
     -decohesion)
-        workdir=y_planar_decohesion
-        mycmd=~/yin_github/vasp_utils/vasp_python/yin_vasp_plot_planar_decohesion.py
+        workdir=y_decohesion
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_planar_defects/yin_vasp_plot_decohesion.py
         sub_plot_all  "$workdir"  $mycmd
         ;;
 
