@@ -44,7 +44,7 @@ def main():
     
     #=========================
     write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3)
-    plot_output(jobn, latoms, dpos_all, ibulk)
+    plot_output(jobn, latoms, dpos_all, gamma, ibulk)
 
 
 
@@ -142,7 +142,7 @@ def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3):
 
 
 
-def plot_output(jobn, latoms, dpos_all, ibulk):
+def plot_output(jobn, latoms, dpos_all, gamma, ibulk):
     njobs = len(jobn)
     print('njobs:', njobs)
 
@@ -173,6 +173,9 @@ def plot_output(jobn, latoms, dpos_all, ibulk):
             ax1.set_xlabel('Atom positions in $x_3$ ($\\mathrm{\\AA}$)')
             ax1.set_ylabel('Displacements $u_i$ ($\\mathrm{\\AA}$)')
             ax1.set_position([0.25, 0.16, 0.7, 0.76])
+
+            ax1.text( xi.max()*0.1, dpos_all[i, :].max()*0.8, \
+                '$\\gamma = \\Delta E / A =$ %.0f mJ/m$^2$' %(gamma[i]) )
 
             filename = 'y_post_planar_relaxed.%s.pdf' %(jobn[i])
 
