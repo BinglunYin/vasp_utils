@@ -15,7 +15,9 @@ sub_plot_all(){
     echo "==> workdir: "  "$workdir"
     echo "==> mycmd: "     $mycmd
 
-    for dirn in ` find ./  -type d  -name "$workdir" `; do
+    mylist=`find ./ -type d -name "$workdir"`
+
+    for dirn in $mylist ; do
         cd $dirn
         echo -e "\n==>" `pwd`
     
@@ -24,6 +26,16 @@ sub_plot_all(){
     
         cd $d0
     done
+
+
+    echo -e "\n==> ${FUNCNAME[0]} summary: "
+    for dirn in $mylist ; do
+        echo -e "\n$dirn"
+        cat $dirn/y_post_time
+        grep "Your highest band" $dirn/y_post_warning
+    done
+    echo " "
+
 }
 
 

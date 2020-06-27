@@ -56,13 +56,14 @@ sub_post(){
    
     
     refdir=`ls -d -- $workdir/*/  |   head -1`
-    echo "refdir:" $refdir
+    echo -e "refdir:" $refdir "\n"
  
     declare -a arr=(
     "INCAR"
     "KPOINTS"
     "POTCAR"
     "sub.vasp"
+    "Y_CONSTR_LATT"
     )
 
  
@@ -78,24 +79,18 @@ sub_post(){
    
     for i1 in `ls $workdir` ; do
     
-        echo -e "\n==>" $i1
         resdir=$workdir/$i1
         echo "resdir:" $resdir 
  
         #--------------------
         
         j1=`grep 'energy  without entropy' $resdir/OUTCAR | tail -1`
-        echo 'j1=' $j1
         j11=`echo $j1 | awk '{printf "%16.8f", $7}'`
-        echo 'j11=' $j11
         
         j2=`grep 'EENTRO' $resdir/OUTCAR  | tail -1`
-        echo 'j2=' $j2
         j22=`echo $j2 | awk '{printf "%16.8f", $5}'`
-        echo 'j22=' $j22
         
         j3=`grep 'in kB' $resdir/OUTCAR | tail -1`
-        echo 'j3=' $j3
         
         echo -e $i1"\t"$j11"\t"$j22"\t"$j3 >> ./y_post_data
 
@@ -104,7 +99,7 @@ sub_post(){
  
         jv=`grep "volume of cell"     $resdir/OUTCAR      | tail -1 | awk '{printf $5}'`
         jp=`grep "external pressure"  $resdir/OUTCAR      | tail -1 | awk '{printf $4}'`
-        jF=`grep -A1 norm  $resdir/y_max_force | tail -1 | awk '{printf $2}'`
+        jF=`grep -A1 norm             $resdir/y_max_force | tail -1 | awk '{printf $2}'`
         
         echo -e $i1"\t"$jv"\t"$jp"\t"$jF >> ./y_post_data_2
         
@@ -133,16 +128,19 @@ sub_post(){
         
         #--------------------
         
-        k14=`grep 'ENCUT'             $resdir/OUTCAR  | awk '{printf $1$2$3}'`
-        k15=`sed -n '4,4p'            $resdir/KPOINTS | awk '{printf $1}'`
-        k16=`grep 'generate k-points' $resdir/OUTCAR  | awk '{printf $2"="$4"*"$5"*"$6}'`
-        k17=`grep 'SIGMA'             $resdir/OUTCAR  | head -1 | awk '{printf $1$2$3$6}'`
-        k18=`grep 'NBANDS'            $resdir/OUTCAR  | head -1 | awk '{printf $2$3$4" "$14$15}'`
-        k19=`grep 'EDIFF '            $resdir/OUTCAR  | head -1 | awk '{printf $1$2$3}'`
-        k20=`grep 'ISIF'              $resdir/OUTCAR  | awk '{printf $1$2$3}'`
-        k21=`grep 'EDIFFG'            $resdir/OUTCAR  | awk '{printf $1$2$3}'`
-        
-        echo -e $i1"\t"$k14" "$k15" "$k16"\t"$k17" "$k18"\t"$k19" "$k20" "$k21 >> ./y_post_param
+        k31=`grep 'ENCUT'             $resdir/OUTCAR  | awk '{printf "ENCUT="$3}'`
+        k32=`grep 'SIGMA'             $resdir/OUTCAR  | head -1 | awk '{printf "ISMEAR="$3$6}'`
+        k33=`grep 'EDIFF '            $resdir/OUTCAR  | head -1 | awk '{printf "EDIFF="$3}'`
+        k34=`grep 'ISIF'              $resdir/OUTCAR  | awk '{printf $3}'`
+        k35=`grep 'EDIFFG'            $resdir/OUTCAR  | awk '{printf $3}'`
+
+        k36=`grep 'LREAL'             $resdir/OUTCAR  | awk '{printf $1$2$3}'`
+        k37=`grep 'point group assoc' $resdir/OUTCAR  | head -1 | awk '{printf $11}'`        
+        k38=`sed -n '4,4p'            $resdir/KPOINTS | awk '{printf "KP="$1}'`
+        k39=`grep 'generate k-points' $resdir/OUTCAR  | awk '{printf $4"*"$5"*"$6}'`
+        k40=`grep 'NBANDS'            $resdir/OUTCAR  | head -1 | awk '{printf $2$3$4" "$14$15}'`
+
+        echo -e $i1"\t"$k31" "$k32" "$k33" "$k34" "$k35" "$k36" "$k37" "$k38" "$k39" "$k40 >> ./y_post_param
        
  
         #--------------------
@@ -174,8 +172,6 @@ sub_post(){
     echo "|       un-relaxed jobs: " $ur
     echo -e "----------------------------------\n"
     
-#    cat y_post_time
-#    echo -e " "
     
     ls -lshG $workdir/*/slurm-*
     echo -e " "
