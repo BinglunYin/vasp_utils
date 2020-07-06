@@ -199,10 +199,17 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
     ax1[-1].set_xlabel('Normalized slip vector')
     ax1[0].set_ylabel('GSFE (mJ/m$^2$)')
     ax1[1].set_ylabel('Inelastic normal displacement ($\\mathrm{\\AA}$)')
-    ax1[2].set_ylabel('Shear stress (GPa)')
+    ax1[2].set_ylabel('Shear stress $\\tau$ (GPa)')
 
     dxi = np.around( xi.max()/6, 1)
     ax1[-1].set_xticks( np.arange(0, xi.max()+dxi, dxi ) )
+
+
+    ax1[2].text(0, tau.min()/2, \
+        '$\\tau_\\mathrm{max} =$ %.1f GPa' %( tau.max() ))
+
+
+
 
 
     plt.savefig('y_post_gsfe.pdf')
