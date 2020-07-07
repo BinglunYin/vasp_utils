@@ -201,8 +201,10 @@ def plot_eos(V, Etot, fitres, p_dft, V1, ca, magtot):
     fig_subp = [4, 1]
     fig1, ax1 = vf.my_plot(fig_wh, fig_subp)
      
-    fig_pos = np.array([0.23, 0.77, 0.70, 0.21])
-    fig_dpos = np.array([0, -0.235, 0, 0])
+
+    fig_pos  = np.array([0.23, 0.77, 0.70, 0.205])
+    fig_dpos = np.array([0, -0.24, 0, 0])
+    
     for i in np.arange(4):
         ax1[i].set_position(fig_pos + i* fig_dpos)
    

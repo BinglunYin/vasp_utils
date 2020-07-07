@@ -1,7 +1,10 @@
 #!/bin/bash
 
+outfile=y_post_diff_input
 
-p_diff=`pwd`/y_post_diff_input
+find ./ -name $outfile    -delete
+
+p_diff=`pwd`/$outfile
 echo 'DIFF'  >   $p_diff
 
 

@@ -174,9 +174,19 @@ def plot_output(jobn, latoms, dpos_all, gamma, ibulk):
             ax1.set_ylabel('Displacements $u_i$ ($\\mathrm{\\AA}$)')
             ax1.set_position([0.25, 0.16, 0.7, 0.76])
 
-            ax1.text( xi.max()*0.1, dpos_all[i, :].max()*0.8, \
-                '$\\Delta E / A =$ %.0f mJ/m$^2$ \n$\\Delta E / (2A) =$ %.0f mJ/m$^2$' \
-                 %(gamma[i], gamma[i]/2) )
+
+            if jobn[i] == 'ssf':
+                str1 = '$\\gamma_\\mathrm{ssf} =$ %.0f mJ/m$^2$'  %(gamma[i])
+            
+            elif jobn[i] == 'surf':
+                str1 = '$\\gamma_\\mathrm{surf} =$ %.0f mJ/m$^2$' %(gamma[i]/2)
+            
+            else:
+                str1 = '$\\Delta E / A =$ %.0f mJ/m$^2$'          %(gamma[i])
+            
+            
+            
+            ax1.text( xi.max()*0.2, dpos_all[i, :].max()*0.8, str1 )
 
             filename = 'y_post_planar_relaxed.%s.pdf' %(jobn[i])
 

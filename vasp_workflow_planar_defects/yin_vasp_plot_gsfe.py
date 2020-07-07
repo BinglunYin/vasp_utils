@@ -190,7 +190,7 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
     ax1[2].plot(x_tau, tau, '-o')
     ax1[2].plot([xi.min(), xi.max()], [0, 0], '--k')
 
-    fig_pos  = np.array([0.22, 0.70, 0.70, 0.28])
+    fig_pos  = np.array([0.23, 0.70, 0.70, 0.265])
     fig_dpos = np.array([0, -0.31, 0, 0])
 
     for i in np.arange(3):

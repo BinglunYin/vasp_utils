@@ -158,7 +158,7 @@ def plot_output(gamma, da33):
 
 
     fig_pos  = np.array([0.23, 0.57, 0.70, 0.40])
-    fig_dpos = np.array([0, -0.45, 0, 0])
+    fig_dpos = np.array([0, -0.46, 0, 0])
 
     ax1[0].set_position(fig_pos)
     ax1[1].set_position(fig_pos + fig_dpos  )
@@ -168,7 +168,7 @@ def plot_output(gamma, da33):
     ax1[1].set_ylabel('Tensile stress $\\sigma$ (GPa)')
 
     ax1[0].text(4, gamma.max()/2, \
-        '$\\gamma_\\mathrm{surf}^\\mathrm{unrelaxed}$ \n= %.1f mJ/m$^2$' %( gamma[-1]/2 ))
+        '$\\gamma_\\mathrm{surf}^\\mathrm{unrelaxed}$ \n= %.0f mJ/m$^2$' %( gamma[-1]/2 ))
 
     ax1[1].text(4, tau.max()/2, \
         '$\\sigma_\\mathrm{max}$ \n= %.1f GPa' %( tau.max() ))
