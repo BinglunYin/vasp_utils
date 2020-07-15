@@ -28,6 +28,14 @@ main(){
         pwd
    
         sub_post 
+
+        case "$1" in
+            -v) 
+                echo "==> verbose: "
+                ~/opt/bin/python3  ~/yin_github/vasp_utils/vasp_universal/yin_vasp_plot_mag.py
+                ;;
+        esac
+
         cd $d0
         unset dirn
     done
