@@ -35,11 +35,14 @@ def plot_output(latoms2, jobn):
     fig_wh = [3.15, 3]
     fig_subp = [1, 1]
 
-
+    mag0_all = np.array([])
+    
     for i in np.arange( len(jobn) ):
         magmom = latoms2[i].get_magnetic_moments()
         mag0 = latoms2[i].get_magnetic_moment() \
             / len(latoms2[i].get_positions())
+
+        mag0_all = np.append(mag0_all, mag0)
 
         chem_sym = latoms2[i].get_chemical_symbols()
         elem_sym = pd.unique( chem_sym )
@@ -85,7 +88,21 @@ def plot_output(latoms2, jobn):
 
         filename = './y_post_mag/y_post_mag_%s.pdf' %(jobn[i])
         plt.savefig(filename)
+        plt.close('all')
 
+
+    mag0_all = np.abs( mag0_all )
+    f = open('./y_post_mag/y_post_mag_note.txt', 'w+')
+    f.write('# VASP magnetic moment , supercell mean (mu_B/atom): \n' )
+    
+    f.write('\n%8s %8s %8s \n' \
+        %('mean', 'max', 'min' ) )
+    f.write('%8.2f %8.2f %8.2f \n\n' \
+        %(mag0_all.mean(), mag0_all.max(), mag0_all.min() ) )
+    
+    for i in np.arange( len(jobn) ):
+        f.write('%20s %8.2f \n' \
+            %(jobn[i], mag0_all[i]  ) )
 
 
 main()

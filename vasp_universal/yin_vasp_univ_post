@@ -40,7 +40,7 @@ main(){
         unset dirn
     done
 
-    echo "==> summary: "
+    echo -e "\n==> post summary: "
     for dirn in $mylist; do
         echo -e "\n$dirn"
         cat $dirn/../y_post_time
