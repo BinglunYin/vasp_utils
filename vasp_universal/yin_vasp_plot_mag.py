@@ -60,7 +60,8 @@ def plot_output(latoms2, jobn):
         for j in np.arange(nelem):
             mask = (atom_num == elem_num[j])
             yi = magmom[mask]
-            xi = np.linspace(-0.2, 0.2, len(yi)) + j
+            temp = np.linspace(-0.2, 0.2, len(yi)+2 ) + j
+            xi = temp[1:-1]
             ax1.plot( xi , yi, 'o' )
 
             ax1.text(j, ymax/4*5.0, '%.2f' %( yi.mean() ), \
@@ -103,6 +104,8 @@ def plot_output(latoms2, jobn):
     for i in np.arange( len(jobn) ):
         f.write('%20s %8.2f \n' \
             %(jobn[i], mag0_all[i]  ) )
+    f.close()
+
 
 
 main()
