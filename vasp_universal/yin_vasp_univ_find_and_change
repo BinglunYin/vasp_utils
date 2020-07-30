@@ -53,6 +53,18 @@ case "$1" in
         ;;
 
 
+    -cn)
+        echo "==> changing cn in POSCAR to" $2 ": "
+        for filen in ` find ./ -type f -name "POSCAR*" `; do
+            echo $filen
+            sed '6s/.*/'" $2"'/' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+
+
     -kp)
         echo "==> changing kp in KPOINTS to" $2 ": "
         for filen in ` find ./ -type f -name "KPOINTS" `; do
