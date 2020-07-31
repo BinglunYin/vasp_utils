@@ -33,6 +33,7 @@ main(){
             -v) 
                 echo "==> verbose: "
                 ~/opt/bin/python3  ~/yin_github/vasp_utils/vasp_universal/yin_vasp_plot_mag.py
+                ~/opt/bin/python3  ~/yin_github/vasp_utils/vasp_universal/yin_vasp_plot_mean.py
                 ;;
         esac
 
