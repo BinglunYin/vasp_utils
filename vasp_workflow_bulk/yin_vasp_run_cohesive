@@ -27,7 +27,7 @@ sub_run_cohesive(){
     yin_vasp_univ_find_and_change  -ediff  1E-6
 
     yin_slurm_find_and_change  -time  2          
-    yin_slurm_find_and_change  -partition  $my_slurm_partition    
+    yin_slurm_find_and_change  -partition  default 
 
     cd ..
    

@@ -27,12 +27,11 @@ sub_run_Cij(){
 
     yin_vasp_univ_find_and_change  -isym  0 
     yin_vasp_univ_find_and_change  -isif  2
-    yin_vasp_univ_find_and_change  -ediffg  -1E-3
 
     case "$1" in
         -elem) echo "==> run Cij for elements "
             yin_slurm_find_and_change  -time  2          
-            yin_slurm_find_and_change  -partition  $my_slurm_partition 
+            yin_slurm_find_and_change  -partition  default 
             ;;
         
         *) echo "==> run Cij for supercell " 
