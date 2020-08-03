@@ -144,7 +144,7 @@ sub_post(){
         k35=`grep 'EDIFFG'            $resdir/OUTCAR  | awk '{printf $3}'`
 
         k36=`grep 'LREAL'             $resdir/OUTCAR  | tail -1 | awk '{printf $1$2$3}'`
-        k37=`grep 'point group assoc' $resdir/OUTCAR  | head -1 | awk '{printf $11}'`        
+        k37=`grep 'has the point symmetry' $resdir/OUTCAR  | head -1 | awk '{printf $11}'`        
         k38=`sed -n '4,4p'            $resdir/KPOINTS | awk '{printf "KP="$1}'`
         k39=`grep 'generate k-points' $resdir/OUTCAR  | awk '{printf $4"*"$5"*"$6}'`
         k40=`grep 'NBANDS'            $resdir/OUTCAR  | head -1 | awk '{printf $2$3$4" "$14$15}'`
