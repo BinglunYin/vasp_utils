@@ -53,6 +53,16 @@ case "$1" in
         ;;
 
 
+    -tovasp4)
+        echo "==> changing POSCAR to vasp4 format: "
+        for filen in ` find ./ -type f -name "POSCAR*" `; do
+            echo $filen
+            sed '6,6d' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
     -cn)
         echo "==> changing cn in POSCAR to" $2 ": "
         for filen in ` find ./ -type f -name "POSCAR*" `; do
