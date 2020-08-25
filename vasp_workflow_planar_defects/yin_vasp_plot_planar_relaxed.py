@@ -33,6 +33,7 @@ def main():
     
     natoms = latoms[ibulk].get_positions().shape[0]
     E0bulk = Etot[ibulk]/natoms
+    V0bulk = latoms[ibulk].get_volume()/natoms
 
     if np.abs( Asf-a11*a22 ) > 1e-10:
         sys.exit('ABORT: wrong Asf. ')
@@ -43,8 +44,8 @@ def main():
     gamma = dE/Asf *qe*1e23   #[mJ/m^2]
     
     #=========================
-    write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3)
-    plot_output(jobn, latoms, dpos_all, gamma, ibulk)
+    write_output(Asf, a11, a22, E0bulk, V0bulk, jobn, dE, gamma, da3)
+    plot_output(jobn, latoms, dpos_all, gamma, Asf, ibulk)
 
 
 
@@ -64,6 +65,17 @@ def check_constraints(Etot, latoms, ibulk):
     for i in np.arange(njobs):
         dE = np.append(dE, Etot[i]-Etot[ibulk])
     
+
+        # check elem
+        if latoms[i].get_chemical_formula() \
+            != latoms[ibulk].get_chemical_formula():
+            sys.exit('ABORT: wrong chemical formula. ')
+
+        temp = latoms[i].get_atomic_numbers() \
+            - latoms[ibulk].get_atomic_numbers()
+        vf.confirm_0( temp )
+        
+
         # check latt 
         dlatt = latoms[i].cell[:] - latoms[ibulk].cell[:]
 
@@ -107,7 +119,7 @@ def check_constraints(Etot, latoms, ibulk):
 
    
 
-def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3):
+def write_output(Asf, a11, a22, E0bulk, V0bulk, jobn, dE, gamma, da3):
     njobs = gamma.shape[0]
     print('njobs:', njobs)
        
@@ -116,10 +128,15 @@ def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3):
     f.write('# gamma = dE/Asf \n' )
 
 
+    f.write('\n%16s %16s %16s \n' \
+        %('Asf (Ang^2)', 'a11 (Ang)', 'a22 (Ang)' ) )
+    f.write('%16.8f %16.8f %16.8f \n' \
+        %(Asf, a11, a22 ))
+
     f.write('\n%16s %16s %16s %16s \n' \
-        %('Asf (Ang^2)', 'a11 (Ang)', 'a22 (Ang)', 'E0_bulk (eV)' ) )
+        %('E0_bulk (eV)', 'V0_bulk (Ang^3)', 'a0_fcc', 'a0_bcc' ) )
     f.write('%16.8f %16.8f %16.8f %16.8f \n' \
-        %(Asf, a11, a22, E0bulk ))
+        %(E0bulk, V0bulk, (V0bulk*4)**(1/3), (V0bulk*2)**(1/3) ))
 
 
     f.write('\n%10s %10s %16s %10s %10s %10s %10s %10s \n' \
@@ -142,7 +159,9 @@ def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da3):
 
 
 
-def plot_output(jobn, latoms, dpos_all, gamma, ibulk):
+def plot_output(jobn, latoms, dpos_all, gamma, Asf, ibulk):
+    from ase.formula import Formula
+    
     njobs = len(jobn)
     print('njobs:', njobs)
 
@@ -178,15 +197,22 @@ def plot_output(jobn, latoms, dpos_all, gamma, ibulk):
             if jobn[i] == 'ssf':
                 str1 = '$\\gamma_\\mathrm{ssf} =$ %.0f mJ/m$^2$'  %(gamma[i])
             
+            elif jobn[i] == 'usf':
+                str1 = '$\\gamma_\\mathrm{usf} =$ %.0f mJ/m$^2$' %(gamma[i])
+            
             elif jobn[i] == 'surf':
                 str1 = '$\\gamma_\\mathrm{surf} =$ %.0f mJ/m$^2$' %(gamma[i]/2)
             
             else:
                 str1 = '$\\Delta E / A =$ %.0f mJ/m$^2$'          %(gamma[i])
             
+            str2 = latoms[ibulk].get_chemical_formula()
+            str2 = Formula(str2).format('latex')
             
-            
-            ax1.text( xi.max()*0.2, dpos_all[i, :].max()*0.8, str1 )
+            str_all = '%s\n$A =$%.4f $\\mathrm{\\AA}^2$\n%s' \
+                %(str2, Asf, str1)  
+        
+            ax1.text( xi.max()*0.2, dpos_all[i, :].max()*0.6, str_all )
 
             filename = 'y_post_planar_relaxed.%s.pdf' %(jobn[i])
 
