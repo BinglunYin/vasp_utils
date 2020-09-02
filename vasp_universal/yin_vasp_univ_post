@@ -34,6 +34,7 @@ main(){
                 echo "==> verbose: "
                 ~/opt/bin/python3  ~/yin_github/vasp_utils/vasp_universal/yin_vasp_plot_mag.py
                 ~/opt/bin/python3  ~/yin_github/vasp_utils/vasp_universal/yin_vasp_plot_statistics.py
+                ~/opt/bin/python3  ~/yin_github/vasp_utils/vasp_universal/yin_vasp_plot_param_statistics.py
                 ;;
         esac
 
@@ -60,6 +61,7 @@ sub_post(){
     
     echo 'i1   job state: relaxed? time? CPUs? memory?'         > ./y_post_time
     echo 'i1   input parameters'                                > ./y_post_param
+    echo 'i1   input parameters 2'                              > ./y_post_param_2
     echo 'i1   diff INCAR KPOINTS POTCAR sub.*'                 > ./y_post_diff
     echo 'i1   WARNING'                                         > ./y_post_warning 
    
@@ -152,6 +154,25 @@ sub_post(){
         echo -e $i1"\t"$k31" "$k32" "$k33" "$k34" "$k35" "$k36" "$k38" "$k39" "$k40" "$k37 >> ./y_post_param
        
  
+
+
+
+#--------------------
+        
+        k41=`grep 'ISTART'           $resdir/OUTCAR  | awk '{printf "ISTART="$3}'`
+        k42=`grep 'ICHARG'           $resdir/OUTCAR  | awk '{printf "ICHARG="$3}'`
+        
+        k43=`grep 'PREC'             $resdir/OUTCAR  | awk '{printf "PREC="$3}'`
+        k44=`grep 'ISPIN'            $resdir/OUTCAR  | awk '{printf "ISPIN="$3}'`
+        k45=`grep 'VOSKOWN'          $resdir/OUTCAR  | head -1 | awk '{printf "VOSKOWN="$2}'`
+        k46=`grep 'RWIGS'            $resdir/OUTCAR  | awk '{printf "RWIGS="$3}'`
+        k47=`grep 'ALGO'             $resdir/OUTCAR  | awk '{printf "IALGO="$3}'`
+
+        echo -e $i1"\t"$k41" "$k42" "$k43" "$k44" "$k45" "$k46" "$k47 >> ./y_post_param_2
+       
+
+
+
         #--------------------
         
         echo -e "\n==================\n "$i1"\n==================\n " >> ./y_post_warning
