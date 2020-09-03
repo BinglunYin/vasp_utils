@@ -168,7 +168,12 @@ sub_post(){
         k46=`grep 'RWIGS'            $resdir/OUTCAR  | awk '{printf "RWIGS="$3}'`
         k47=`grep 'ALGO'             $resdir/OUTCAR  | awk '{printf "IALGO="$3}'`
 
-        echo -e $i1"\t"$k41" "$k42" "$k43" "$k44" "$k45" "$k46" "$k47 >> ./y_post_param_2
+        k48=`grep -B2 'support grid'   $resdir/OUTCAR  | head -1 | awk '{printf "NGX="$5}'`
+        k49=`grep -B1 'support grid'   $resdir/OUTCAR  | head -1 | awk '{printf $4}'`
+        k50=`grep     'support grid'   $resdir/OUTCAR  | awk '{printf $4}'`
+
+
+        echo -e $i1"\t"$k41" "$k42" "$k43" "$k44" "$k45" "$k46" "$k47" "$k48" "$k49" "$k50 >> ./y_post_param_2
        
 
 

@@ -2,6 +2,7 @@
 #!/home/yin/opt/bin/python3
 
 import numpy as np 
+from myvasp import vasp_func as vf
 import sys
 
 
@@ -105,6 +106,11 @@ def vasp_read_post_param(filename='y_post_param', \
         if temp[0] != ljobs[k]['jobname']:
             sys.exit('ABORT: wrong post_param_2')
 
+
+        addgrid = float(temp[10]) / float(temp[9]) 
+        vf.confirm_int(addgrid)
+        addgrid = int(addgrid)
+
         ljobs[k].update({
             'ISTART':  temp[1][7:] ,
             'ICHARG':  temp[2][7:] ,
@@ -113,6 +119,7 @@ def vasp_read_post_param(filename='y_post_param', \
             'VOSKOWN': temp[5][8:] ,
             'RWIGS':   temp[6][6:] ,
             'IALGO':   temp[7][6:] ,
+            'ADDGRID': addgrid ,
         })
                 
     f.close()
