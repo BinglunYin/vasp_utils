@@ -149,7 +149,7 @@ sub_post(){
         k37=`grep 'has the point symmetry' $resdir/OUTCAR  | head -1 | awk '{printf $8}'`        
         k38=`sed -n '4,4p'            $resdir/KPOINTS | awk '{printf "KP="$1}'`
         k39=`grep 'generate k-points' $resdir/OUTCAR  | awk '{printf $4"*"$5"*"$6}'`
-        k40=`grep 'NBANDS'            $resdir/OUTCAR  | head -1 | awk '{printf $2$3$4" "$14$15}'`
+        k40=`grep 'NBANDS='           $resdir/OUTCAR  | head -1 | awk '{printf $2$3$4" "$14$15}'`
 
         echo -e $i1"\t"$k31" "$k32" "$k33" "$k34" "$k35" "$k36" "$k38" "$k39" "$k40" "$k37 >> ./y_post_param
        
