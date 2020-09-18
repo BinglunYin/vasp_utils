@@ -24,6 +24,8 @@ sub_run_eos(){
 
     yin_vasp_univ_find_and_change  -isym  0 
     yin_vasp_univ_find_and_change  -isif  4
+    
+    yin_slurm_find_and_change  -srpl  H
 
     case "$1" in
         -elem) echo "==> run eos for elements "
@@ -62,6 +64,8 @@ sub_run_eos(){
         cd $dirn
 
         cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,sub.*,Y_*,CHGCAR} ./
+        mv CONTCAR POSCAR
+        
         el=`echo $vel | awk '{ printf "%.16f",  ($1)^(1/3); }'`
         echo 'el' $el
 

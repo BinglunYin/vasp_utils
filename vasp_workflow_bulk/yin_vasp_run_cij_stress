@@ -28,6 +28,8 @@ sub_run_Cij(){
     yin_vasp_univ_find_and_change  -isym  0 
     yin_vasp_univ_find_and_change  -isif  2
 
+    yin_slurm_find_and_change  -srpl  H
+
     case "$1" in
         -elem) echo "==> run Cij for elements "
             yin_slurm_find_and_change  -time  2          
@@ -93,8 +95,8 @@ sub_run_Cij(){
     mkdir $dirn
     cd $dirn
     
-    cp $srcdir/{INCAR,KPOINTS,POTCAR,sub.*,Y_*} ./
-    cp $srcdir/CONTCAR ./POSCAR
+    cp $srcdir/{INCAR,KPOINTS,CONTCAR,POTCAR,sub.*,Y_*,CHGCAR} ./
+    mv CONTCAR POSCAR
     
     
     if [ "$dirn" == "y_Cij_s1" ]; then
