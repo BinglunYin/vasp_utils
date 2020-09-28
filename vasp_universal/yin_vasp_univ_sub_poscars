@@ -12,21 +12,27 @@ cd     $workdir
 # loop
 #=====================
 
-for i1 in `ls $srcdir/poscars`
-do
-mkdir $i1
-cd $i1
+for i1 in `ls $srcdir/poscars` ;  do
+    mkdir $i1
+    cd $i1
+    echo '====================' $i1
+    
+    cp $srcdir/*  ./
+    
 
-echo '====================' $i1
+    case "$1" in
+        -contcar) 
+            cp $srcdir/poscars/$i1/CONTCAR  ./POSCAR
+            ;;
 
-cp $srcdir/* ./
-cp $srcdir/poscars/$i1/* ./
-
-
-echo 'dir for submit:' `pwd`
-#yin_vasp_univ_adjust_NPAR
-sbatch sub.*
-
-cd ..
+        *)  
+            cp $srcdir/poscars/$i1/*  ./
+            ;;   
+    esac
+    
+    
+    echo 'dir for submit:' `pwd`
+    sbatch sub.*
+    cd ..
 done
 
