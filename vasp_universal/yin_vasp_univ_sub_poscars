@@ -12,20 +12,23 @@ cd     $workdir
 # loop
 #=====================
 
-for i1 in `ls $srcdir/poscars` ;  do
+for i1 in $srcdir/poscars/*/ ;  do
+    i1=$(basename $i1)
+    echo '====================' $i1
     mkdir $i1
     cd $i1
-    echo '====================' $i1
     
     cp $srcdir/*  ./
     
 
     case "$1" in
-        -contcar) 
+        -contcar)
+            echo "==> copy CONTCAR: "
             cp $srcdir/poscars/$i1/CONTCAR  ./POSCAR
             ;;
 
         *)  
+            echo "==> copy POSCAR and others: "            
             cp $srcdir/poscars/$i1/*  ./
             ;;   
     esac
@@ -35,4 +38,6 @@ for i1 in `ls $srcdir/poscars` ;  do
     sbatch sub.*
     cd ..
 done
+
+
 
