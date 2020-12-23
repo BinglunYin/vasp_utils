@@ -25,6 +25,7 @@ for i1 in $srcdir/poscars/*/ ;  do
         -contcar)
             echo "==> copy CONTCAR: "
             cp $srcdir/poscars/$i1/CONTCAR  ./POSCAR
+            cp $srcdir/poscars/$i1/CHG*     .
             ;;
 
         *)  
