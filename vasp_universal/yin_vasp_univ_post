@@ -165,7 +165,7 @@ sub_post(){
         k43=`grep 'PREC'             $resdir/OUTCAR  | awk '{printf "PREC="$3}'`
         k44=`grep 'ISPIN'            $resdir/OUTCAR  | awk '{printf "ISPIN="$3}'`
         k45=`grep 'VOSKOWN'          $resdir/OUTCAR  | head -1 | awk '{printf "VOSKOWN="$2}'`
-        k46=`grep 'RWIGS'            $resdir/OUTCAR  | awk '{printf "RWIGS="$3}'`
+        k46=`grep 'RWIGS'            $resdir/OUTCAR  | head -1 | awk '{printf "RWIGS="$3}'`
         k47=`grep 'ALGO'             $resdir/OUTCAR  | awk '{printf "IALGO="$3}'`
 
         k48=`grep -B2 'support grid'   $resdir/OUTCAR  | head -1 | awk '{printf "NGX="$5}'`
