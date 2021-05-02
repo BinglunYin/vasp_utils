@@ -33,10 +33,16 @@ def main():
    
     gamma = dE/Asf *qe*1e23   
     sf, usf = find_sf_usf(gamma)
+
+    from ase.formula import Formula
+    str2 = latoms[0].get_chemical_formula()
+    str2 = Formula(str2).format('latex')
+    str_all = '%s\n$A =$%.4f $\\mathrm{\\AA}^2$' %(str2, Asf)  
+
     
     #=========================
     write_output(Asf, a11, a22, E0bulk, sf, usf, jobn, dE, gamma, da3)
-    plot_GSFE(jobn, gamma, da3, dpos3, latoms)
+    plot_GSFE(jobn, gamma, da3, dpos3, latoms, str_all)
 
 
 
@@ -56,7 +62,18 @@ def check_constraints(Etot, latoms):
     
     for i in np.arange(njobs):
         dE = np.append(dE, Etot[i]-Etot[0])
-    
+
+   
+    # check elem
+        if latoms[i].get_chemical_formula() \
+            != latoms[0].get_chemical_formula():
+            sys.exit('ABORT: wrong chemical formula. ')
+
+        temp = latoms[i].get_atomic_numbers() \
+            - latoms[0].get_atomic_numbers()
+        vf.confirm_0( temp )
+
+ 
         # check latt 
         dlatt = latoms[i].cell[:] - latoms[0].cell[:]
         temp = np.linalg.norm(dlatt[0:2, :])
@@ -162,7 +179,7 @@ def write_output(Asf, a11, a22, E0bulk, sf, usf, jobn, dE, gamma, da3):
 
 
 
-def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
+def plot_GSFE(jobn, gamma, da3, dpos3, latoms, str_all):
     njobs = gamma.shape[0]
     print(njobs)
 
@@ -207,6 +224,9 @@ def plot_GSFE(jobn, gamma, da3, dpos3, latoms):
 
     ax1[2].text(0, tau.min()/2, \
         '$\\tau_\\mathrm{max} =$ %.1f GPa' %( tau.max() ))
+
+
+    ax1[0].text( 0.3, gamma.max()*0.2, str_all )
 
 
 

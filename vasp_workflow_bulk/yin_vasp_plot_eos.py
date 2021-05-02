@@ -63,6 +63,7 @@ def main():
      
     
     if (V1.std() > 1e-10) or (a1_pos.std() > 1e-10) :
+        print('V1:', V1 )
         sys.exit('V1 or a1_pos is wrong. Abort!')
     else:
         V1 = V1.mean()

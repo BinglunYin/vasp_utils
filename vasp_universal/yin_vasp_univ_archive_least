@@ -46,10 +46,19 @@ rsync -am  --include={INCAR,KPOINTS,CONTCAR,OUTCAR,Y_*,y_post_*}   \
 
 echo "==>  compressing"
 
-tar -cJf  $dirlst.tar.xz  $dirlst;
+tar -cJf  $dirlst.tar.xz  $dirlst
+rtrn_code=$?
+
 rm -r $dirlst
 
-echo "==>  done!"
+echo "return code of tar:" $rtrn_code 
+
+if [ $rtrn_code == 0 ]; then
+    echo "==>  done!"
+else
+    echo "==>  tar fails. Abort!" 
+    exit
+fi
 
     
 

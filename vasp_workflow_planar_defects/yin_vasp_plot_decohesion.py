@@ -42,10 +42,16 @@ def main():
 
 
     gamma = dE/Asf *qe*1e23   #[mJ/m^2]
-    
+   
+    from ase.formula import Formula
+    str2 = latoms[0].get_chemical_formula()
+    str2 = Formula(str2).format('latex')
+    str_all = '%s\n$A =$%.4f $\\mathrm{\\AA}^2$' %(str2, Asf)
+
+ 
     #=========================
     write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da33)
-    plot_output(gamma, da33)
+    plot_output(gamma, da33, str_all)
 
 
 
@@ -64,6 +70,16 @@ def check_constraints(Etot, latoms):
     for i in np.arange(njobs):
         dE = np.append(dE, Etot[i]-Etot[0])
     
+
+    # check elem
+        if latoms[i].get_chemical_formula() \
+            != latoms[0].get_chemical_formula():
+            sys.exit('ABORT: wrong chemical formula. ')
+
+        temp = latoms[i].get_atomic_numbers() \
+            - latoms[0].get_atomic_numbers()
+        vf.confirm_0( temp )
+
 
         # check latt 
         dlatt = latoms[i].cell[:] - latoms[0].cell[:]
@@ -135,7 +151,7 @@ def write_output(Asf, a11, a22, E0bulk, jobn, dE, gamma, da33):
 
 
 
-def plot_output(gamma, da33):
+def plot_output(gamma, da33, str_all):
     njobs = len(gamma)
     print(njobs)
 
@@ -172,6 +188,9 @@ def plot_output(gamma, da33):
 
     ax1[1].text(4, tau.max()/2, \
         '$\\sigma_\\mathrm{max}$ \n= %.1f GPa' %( tau.max() ))
+
+
+    ax1[0].text( 2, gamma.max()*0.2, str_all )
 
 
     plt.savefig('y_post_decohesion.pdf')
