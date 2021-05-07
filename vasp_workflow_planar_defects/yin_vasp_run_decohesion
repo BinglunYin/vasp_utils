@@ -26,6 +26,9 @@ sub_run_decohesion(){
     yin_vasp_univ_find_and_change  -nsw  0
     yin_vasp_univ_find_and_change  -algo  N
     yin_vasp_univ_find_and_change  -ediff  1E-6
+    yin_vasp_univ_find_and_change  -isym  default
+
+
 
     yin_slurm_find_and_change  -srpl  H
 

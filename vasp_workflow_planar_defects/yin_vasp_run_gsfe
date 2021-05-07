@@ -64,6 +64,16 @@ case "$1" in
         bp2=0.5
         ;;
 
+
+
+    -a1) echo "==> run GSFE for a1: "
+        workdir=y_gsfe_a1
+        N1=10
+        bp1=1.0
+        bp2=0.0
+        ;;
+
+
  
     *)  echo "==>  Option $1 not recognized. Abort!" 
         exit
