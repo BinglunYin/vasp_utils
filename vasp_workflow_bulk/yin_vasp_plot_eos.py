@@ -62,8 +62,9 @@ def main():
             a1_pos = np.append( a1_pos, a_pos[i] / (float(jobn[i]))**(1/3) )
      
     
-    if (V1.std() > 1e-10) or (a1_pos.std() > 1e-10) :
-        print('V1:', V1 )
+    if (V1.std() > 1e-8) or (a1_pos.std() > 1e-8) :
+        print('V1, V1.std(), a1_pos.std():')
+        print( V1, V1.std(), a1_pos.std()  )
         sys.exit('V1 or a1_pos is wrong. Abort!')
     else:
         V1 = V1.mean()
