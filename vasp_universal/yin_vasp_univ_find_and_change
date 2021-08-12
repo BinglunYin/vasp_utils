@@ -145,6 +145,12 @@ case "$1" in
         ;;
 
 
+    -nelm)
+        str=" NELM= $2      # max e-steps "
+        sub_change  INCAR  "NELM="  "$str"
+        ;;
+
+
 
 
     *)  echo "==>  Option $1 not recognized. Abort!" 
