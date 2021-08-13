@@ -135,7 +135,7 @@ def plot_output(E0, Eatom, Ecoh, V0, k, Etot, Vp, p, VB, B, p0, B0, magtot):
         ax1[i].set_position(fig_pos + fig_dpos*i)
     
     
-    Elimd=math.floor( Etot.min()/1 ) *1
+    Elimd=math.floor( Etot.min() -0.5 ) 
     Elimu=-2*Elimd
     
     plim=-math.floor( p.min()/10) *10
