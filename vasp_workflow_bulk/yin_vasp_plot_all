@@ -63,6 +63,17 @@ case "$1" in
         ;;
 
 
+    -cij_energy) 
+        workdir=y_cij_energy 
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_bulk/yin_vasp_plot_cij_energy.py
+	    sub_plot_all  $workdir  $mycmd 
+        ;;
+
+
+
+
+
+
 
     -planar)
         workdir=y_planar_relaxed_*
