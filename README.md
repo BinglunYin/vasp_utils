@@ -36,7 +36,7 @@ This repo contains scripts for various VASP workflows, including job submission 
 
    Then you will have the EOS result.   
    
-1. All the workflows commands are with the name `yin_vasp_run_*`.
+1. All the workflow commands are with the name `yin_vasp_run_*`.
    
 
 
