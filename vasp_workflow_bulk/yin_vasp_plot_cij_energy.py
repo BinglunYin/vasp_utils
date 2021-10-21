@@ -162,8 +162,8 @@ def plot_cij_energy(ldata):
 
     C11 = p0_tot[0]*2
     C12 = p0_tot[1]-C11
-    C13 = p0_tot[2]-C11
     C33 = p0_tot[3]*2
+    C13 = p0_tot[2]-(C11+C33)/2
     C44 = p0_tot[4]*2
 
 
