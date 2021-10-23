@@ -53,6 +53,17 @@ case "$1" in
         ;;
 
 
+    -a0contcar)
+        echo "==> changing a0 in CONTCAR to" $2 ": "
+        for filen in ` find ./ -type f -name "CONTCAR*" `; do
+            echo $filen
+            sed '2s/.*/'" $2"'/' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+
     -tovasp4)
         echo "==> changing POSCAR to vasp4 format: "
         for filen in ` find ./ -type f -name "POSCAR*" `; do
@@ -149,6 +160,19 @@ case "$1" in
         str=" NELM= $2      # max e-steps "
         sub_change  INCAR  "NELM="  "$str"
         ;;
+
+
+    -encut)
+        str=" ENCUT= $2      # plane wave cutoff "
+        sub_change  INCAR  "ENCUT="  "$str"
+        ;;
+
+
+    -sigma)
+        str=" SIGMA= $2      # width of smearing "
+        sub_change  INCAR  "SIGMA="  "$str"
+        ;;
+
 
 
 
