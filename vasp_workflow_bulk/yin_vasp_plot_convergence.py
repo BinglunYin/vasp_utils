@@ -74,11 +74,11 @@ def plot_convergence(ljobn, lEtot, lEent):
 
     for i in np.arange(2):
         ax1[i, 0].plot( ljobn[i], lEtot[i], '-o')
-        ax1[i, 1].plot( ljobn[i][1:], np.diff( lEtot[i] )*1e3, '-o')
+        ax1[i, 1].plot( ljobn[i][0:-1], np.diff( lEtot[i] )*1e3, '-o')
 
 
     ax1[2, 0].plot( ljobn[2], lEent[2], '-s')
-    ax1[2, 1].plot( ljobn[2][1:], np.diff( lEent[2] )*1e3, '-s')
+    ax1[2, 1].plot( ljobn[2][0:-1], np.diff( lEent[2] )*1e3, '-s')
 
 
     for j in np.arange(2):
@@ -98,9 +98,9 @@ def plot_convergence(ljobn, lEtot, lEent):
     ax1[1, 0].set_ylabel('Energy (eV/atom)')
     ax1[2, 0].set_ylabel('EENTRO (eV/atom)')
 
-    ax1[0, 1].set_ylabel('$\\Delta_{(i)-(i-1)}$ (meV/atom)')
-    ax1[1, 1].set_ylabel('$\\Delta_{(i)-(i-1)}$ (meV/atom)')
-    ax1[2, 1].set_ylabel('$\\Delta_{(i)-(i-1)}$ (meV/atom)')
+    ax1[0, 1].set_ylabel('$\\Delta_{(i+1)-(i)}$ (meV/atom)')
+    ax1[1, 1].set_ylabel('$\\Delta_{(i+1)-(i)}$ (meV/atom)')
+    ax1[2, 1].set_ylabel('$\\Delta_{(i+1)-(i)}$ (meV/atom)')
 
 
     plt.savefig('y_post_convergence.pdf')
