@@ -43,6 +43,16 @@ sub_plot_all(){
 
 case "$1" in
 
+
+    -convergence) 
+        workdir=y_convergence 
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_bulk/yin_vasp_plot_convergence.py
+	    sub_plot_all  $workdir  $mycmd 
+        ;;
+
+
+
+
     -eos) 
         workdir=y_eos
         mycmd=~/yin_github/vasp_utils/vasp_workflow_bulk/yin_vasp_plot_eos.py

@@ -72,7 +72,7 @@ sub_run_convergence(){
                 echo ================ $dirn2
                 mkdir $dirn2
                 cd $dirn2 
-                cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,sub.*} ./
+                cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,Y_*,sub.*} ./
 
                 yin_vasp_univ_find_and_change  -encut  $j 
 
@@ -90,7 +90,7 @@ sub_run_convergence(){
                 echo ================ $dirn2
                 mkdir $dirn2
                 cd $dirn2
-                cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,sub.*} ./
+                cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,Y_*,sub.*} ./
 
                 yin_vasp_univ_find_and_change  -kp  $j
 
@@ -108,7 +108,7 @@ sub_run_convergence(){
                 echo ================ $dirn2
                 mkdir $dirn2
                 cd $dirn2
-                cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,sub.*} ./
+                cp $srcdir/{INCAR,KPOINTS,POSCAR,POTCAR,Y_*,sub.*} ./
 
                 yin_vasp_univ_find_and_change  -sigma  $j
 
