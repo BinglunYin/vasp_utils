@@ -74,7 +74,7 @@ sub_post(){
     "KPOINTS"
     "POTCAR"
     "sub.vasp"
-    "Y_CONSTR_LATT"
+    "Y_CONSTR_CELL.IN"
     )
 
  
@@ -108,9 +108,9 @@ sub_post(){
         
         #--------------------
  
-        jv=`grep "volume of cell"     $resdir/OUTCAR      | tail -1 | awk '{printf $5}'`
-        jp=`grep "external pressure"  $resdir/OUTCAR      | tail -1 | awk '{printf $4}'`
-        jF=`grep -A1 norm             $resdir/y_max_force | tail -1 | awk '{printf $2}'`
+        jv=`grep "volume of cell"     $resdir/OUTCAR                 | tail -1 | awk '{printf $5}'`
+        jp=`grep "external pressure"  $resdir/OUTCAR                 | tail -1 | awk '{printf $4}'`
+        jF=`grep -A1 norm             $resdir/y_force_to_relax.out   | tail -1 | awk '{printf $2}'`
         
         echo -e $i1"\t"$jv"\t"$jp"\t"$jF >> ./y_post_data_2
         
