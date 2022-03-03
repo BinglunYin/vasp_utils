@@ -38,7 +38,7 @@ echo $dirlstPATH
 
 #=======================
 
-rsync -am  --include={INCAR,KPOINTS,CONTCAR,OUTCAR,Y_*,y_post_*}   \
+rsync -am  --include={INCAR,KPOINTS,CONTCAR,OUTCAR,Y_*,y_post_*,POSCAR*}   \
     --include="*/"  --exclude="*"  "${dirjobPATH}/"  "${dirlstPATH}/" 
 
 

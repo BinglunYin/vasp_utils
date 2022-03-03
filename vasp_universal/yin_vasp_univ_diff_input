@@ -18,7 +18,7 @@ declare -a arr=(
 "INCAR"
 "KPOINTS"
 "sub.vasp"
-"Y_CONSTR_LATT"
+"Y_CONSTR_CELL.IN"
 )
 
 
