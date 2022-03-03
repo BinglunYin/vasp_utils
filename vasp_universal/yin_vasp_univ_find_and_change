@@ -53,6 +53,19 @@ case "$1" in
         ;;
 
 
+
+# the lattice a3  
+    -a3) 
+        echo "==> changing a3 in POSCAR to" $2 ": "
+        for filen in ` find ./ -type f -name "POSCAR*" `; do
+            echo $filen 
+            sed '5s/.*/'" $2"'/' $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+
     -a0contcar)
         echo "==> changing a0 in CONTCAR to" $2 ": "
         for filen in ` find ./ -type f -name "CONTCAR*" `; do
