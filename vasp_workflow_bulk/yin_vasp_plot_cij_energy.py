@@ -118,7 +118,7 @@ def plot_cij_energy(ldata):
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
-    xi = np.linspace(-0.004, 0.004, 1000)
+    xi = np.linspace(-0.003, 0.003, 1000)
 
     fig_wh = [7, 10]
     fig_subp = [5, 2]
@@ -198,7 +198,7 @@ def plot_cij_energy(ldata):
 
     for i in np.arange(len(ldata)):
         for j in np.arange(2):
-            ax1[i,j].set_xticks(np.arange(-0.004, 0.006, 0.002))
+            # ax1[i,j].set_xticks(np.arange(-0.004, 0.006, 0.002))
             ax1[4,j].set_xlabel('Strain')
 
         ax1[i,0].set_ylabel('Elastic energy density (GPa)')
@@ -210,12 +210,61 @@ def plot_cij_energy(ldata):
     str1 = '$C_{11}$, $C_{12}$, $C_{13}$, $C_{33}$, $C_{44}$ (GPa): \n%.2f,   %.2f,   %.2f,   %.2f,   %.2f ' \
         %( C11, C12, C13, C33, C44 )
     ymin, ymax = ax1[0,0].get_ylim()
-    ax1[0,0].text(-0.004, ymax*1.05, str1 )
+    ax1[0,0].text(-0.003, ymax*1.05, str1 )
 
 
 
     plt.savefig('y_post_cij_energy.pdf')
     plt.close('all')
+
+
+
+
+    write_cij_energy( np.array([ C11, C12, C13, C33, C44]) )
+
+
+
+
+
+
+
+
+
+
+def write_cij_energy( cij_hcp ):
+
+    f = open('y_post_cij_energy.txt','w+')
+    f.write('# Cij from energy method: \n' )
+
+    f.write('\n%12s %12s %12s %12s %12s \n'  
+        %('C11', 'C12', 'C13', 'C33', 'C44') )
+
+    f.write('%12.4f %12.4f %12.4f %12.4f %12.4f \n' \
+        %(cij_hcp[0], cij_hcp[1], cij_hcp[2], cij_hcp[3], cij_hcp[4]) )
+
+
+
+    from myalloy import calc_elastic_constant as ce 
+    E_x, E_z, nu_xy, nu_xz, mu_xz = ce.calc_transverse_isotropy( cij_hcp ) 
+  
+
+    f.write('\n%12s %12s %12s %12s %12s \n'  
+        %('E_x', 'E_x', 'nu_xy', 'nu_xz', 'mu_xz') )
+
+    f.write('%12.4f %12.4f %12.4f %12.4f %12.4f \n' \
+        %(E_x, E_x, nu_xy, nu_xz, mu_xz) )
+
+
+
+    f.write('\n%25s %25s \n'  
+        %('E_x/(1-nu_xy)', 'E_x*nu_xz/(1-nu_xy)/E_z' ) )
+
+    f.write('%25.4f %25.4f \n' \
+        %( E_x/(1-nu_xy),   E_x*nu_xz/(1-nu_xy)/E_z  ) )
+
+
+
+    f.close() 
 
 
 
