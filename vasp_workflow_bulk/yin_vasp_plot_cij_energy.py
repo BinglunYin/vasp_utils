@@ -198,7 +198,7 @@ def plot_cij_energy(ldata):
 
     for i in np.arange(len(ldata)):
         for j in np.arange(2):
-            # ax1[i,j].set_xticks(np.arange(-0.004, 0.006, 0.002))
+            ax1[i,j].set_xticks(np.arange(-0.002, 0.004, 0.002))
             ax1[4,j].set_xlabel('Strain')
 
         ax1[i,0].set_ylabel('Elastic energy density (GPa)')
@@ -249,10 +249,10 @@ def write_cij_energy( cij_hcp ):
   
 
     f.write('\n%12s %12s %12s %12s %12s \n'  
-        %('E_x', 'E_x', 'nu_xy', 'nu_xz', 'mu_xz') )
+        %('E_x', 'E_z', 'nu_xy', 'nu_xz', 'mu_xz') )
 
     f.write('%12.4f %12.4f %12.4f %12.4f %12.4f \n' \
-        %(E_x, E_x, nu_xy, nu_xz, mu_xz) )
+        %( E_x,   E_z,   nu_xy,   nu_xz,   mu_xz ) )
 
 
 

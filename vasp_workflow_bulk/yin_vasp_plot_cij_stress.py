@@ -203,6 +203,24 @@ def write_output(s, s_d, Cij_d, fitres, C14, Cij_cubic, Cij_hcp):
 
     f.write("%10.2f \n\n" %( (c11*c33 + c12*c33 - 2*c13**2)/(c11 + c12 - 4*c13 + 2*c33) ))
     
+
+
+
+    f.write("# Transverse isotropy \n")
+
+    from myalloy import calc_elastic_constant as ce  
+    E_x, E_z, nu_xy, nu_xz, mu_xz = ce.calc_transverse_isotropy( cij_mean[0:-1] )
+        
+    f.write("%12s %12s %12s %12s %12s \n"             %( 'E_x', 'E_z', 'nu_xy', 'nu_xz', 'mu_xz' ) )
+    f.write("%12.4f %12.4f %12.4f %12.4f %12.4f \n\n" %(  E_x,   E_z,   nu_xy,   nu_xz,   mu_xz  ) )
+
+    f.write("%25s %25s \n"       %( 'E_x/(1-nu_xy)', 'nu_xz*E_x/(1-nu_xy)/E_z' ) )
+    f.write("%25.4f %25.4f \n\n" %(  E_x/(1-nu_xy),   nu_xz*E_x/(1-nu_xy)/E_z  ) )
+
+
+
+
+
     f.close() 
     
     
