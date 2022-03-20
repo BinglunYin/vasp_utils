@@ -108,21 +108,33 @@ case "$1" in
 
 
 
-    
-    -E_in_slab)
-        workdir=y_E_in_slab
-        mycmd=~/yin_github/vasp_utils/vasp_workflow_others/yin_vasp_plot_E_in_slab.py
+    -E_in_2_bulk)
+        workdir=y_E_in_2_bulk
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_others/yin_vasp_plot_E_in_2_bulk.py
             sub_plot_all  $workdir  $mycmd
         ;;
 
 
-    -E_in_bulk)
-        workdir=y_E_in_bulk
-        mycmd=~/yin_github/vasp_utils/vasp_workflow_others/yin_vasp_plot_E_in_bulk.py
+    -E_in_2_slab)
+        workdir=y_E_in_2_slab
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_others/yin_vasp_plot_E_in_2_slab.py
             sub_plot_all  $workdir  $mycmd
         ;;
 
 
+
+    -E_in_1_bulk)
+        workdir=y_E_in_1_bulk
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_others/yin_vasp_plot_E_in_1_bulk.py
+            sub_plot_all  $workdir  $mycmd
+        ;;
+
+
+    -E_in_1_slab)
+        workdir=y_E_in_1_slab
+        mycmd=~/yin_github/vasp_utils/vasp_workflow_others/yin_vasp_plot_E_in_1_slab.py
+            sub_plot_all  $workdir  $mycmd
+        ;;
 
 
 

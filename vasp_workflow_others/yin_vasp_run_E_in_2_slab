@@ -7,7 +7,7 @@ main(){
 
     if [ -d "$srcdir0" ]
     then
-        sub_run_E_in_slab $1
+        sub_run_E_in_2_slab $1
     else
         echo "==> no $srcdir0 found! Abort!"
         exit
@@ -18,7 +18,7 @@ main(){
 
 
 
-sub_run_E_in_slab(){
+sub_run_E_in_2_slab(){
     srcdir=`pwd`/y_full_relax_temp
     rm -rf $srcdir
 
@@ -65,7 +65,7 @@ sub_run_E_in_slab(){
     
     #=====================
     
-    dirCij=y_E_in_slab
+    dirCij=y_E_in_2_slab
     
     rm -rI  $dirCij
     mkdir   $dirCij
