@@ -146,7 +146,7 @@ def calc_d0(latoms, elt):
         d[i,:] = np.diff(latt[:,2]) / elt[i]
                
 
-    vf.confirm_0( np.std(d, axis=0) / np.mean(d, axis=0) *1e-7 )
+    vf.confirm_0( np.std(d, axis=0) / np.mean(d, axis=0) *1e-8 )
     return np.mean(d, axis=0)
 
 
@@ -265,7 +265,7 @@ def plot_E_in_d0(sys_name, d0):
         str1, horizontalalignment = 'center' )
 
 
-    plt.savefig('y_post_E_in_d0.pdf')
+    plt.savefig('y_post_E_in.d0.pdf')
     plt.close('all')
 
 

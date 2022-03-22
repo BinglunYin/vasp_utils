@@ -29,6 +29,9 @@ sub_run_Cij(){
     yin_vasp_univ_find_and_change  -isif  2
 
     yin_slurm_find_and_change  -srpl  H
+    
+    echo -e "0\n0.0  0.0  0.0  0.0  0.0  0.0" > Y_CONSTR_CELL.IN
+
 
     case "$1" in
         -elem) echo "==> run Cij for elements "

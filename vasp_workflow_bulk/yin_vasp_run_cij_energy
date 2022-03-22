@@ -30,6 +30,9 @@ sub_run_Cij_energy(){
 
     yin_slurm_find_and_change  -srpl  H
 
+    echo -e "0\n0.0  0.0  0.0  0.0  0.0  0.0" > Y_CONSTR_CELL.IN
+
+
     case "$1" in
         -elem) echo "==> run Cij for elements "
             yin_slurm_find_and_change  -time  2          
