@@ -257,10 +257,10 @@ def write_cij_energy( cij_hcp ):
 
 
     f.write('\n%25s %25s \n'  
-        %('E_x/(1-nu_xy)', 'E_x*nu_xz/E_z/(1-nu_xy)' ) )
+        %('E_x/(1-nu_xy)', 'nu_xz/(1-nu_xy)' ) )
 
     f.write('%25.4f %25.4f \n' \
-        %( E_x/(1-nu_xy),   E_x*nu_xz/E_z/(1-nu_xy)  ) )
+        %( E_x/(1-nu_xy),   nu_xz/(1-nu_xy)  ) )
 
 
     f.write('\n%25s \n'  

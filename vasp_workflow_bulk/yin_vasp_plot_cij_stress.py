@@ -210,13 +210,29 @@ def write_output(s, s_d, Cij_d, fitres, C14, Cij_cubic, Cij_hcp):
 
     from myalloy import calc_elastic_constant as ce  
     E_x, E_z, nu_xy, nu_xz, mu_xz = ce.calc_transverse_isotropy( cij_mean[0:-1] )
-        
-    f.write("%12s %12s %12s %12s %12s \n"             %( 'E_x', 'E_z', 'nu_xy', 'nu_xz', 'mu_xz' ) )
-    f.write("%12.4f %12.4f %12.4f %12.4f %12.4f \n\n" %(  E_x,   E_z,   nu_xy,   nu_xz,   mu_xz  ) )
 
-    f.write("%25s %25s \n"       %( 'E_x/(1-nu_xy)', 'nu_xz*E_x/(1-nu_xy)/E_z' ) )
-    f.write("%25.4f %25.4f \n\n" %(  E_x/(1-nu_xy),   nu_xz*E_x/(1-nu_xy)/E_z  ) )
 
+
+    f.write('\n%12s %12s %12s %12s %12s \n'  
+        %('E_x', 'E_z', 'nu_xy', 'nu_xz', 'mu_xz') )
+
+    f.write('%12.4f %12.4f %12.4f %12.4f %12.4f \n' \
+        %( E_x,   E_z,   nu_xy,   nu_xz,   mu_xz ) )
+
+
+
+    f.write('\n%25s %25s \n'  
+        %('E_x/(1-nu_xy)', 'nu_xz/(1-nu_xy)' ) )
+
+    f.write('%25.4f %25.4f \n' \
+        %( E_x/(1-nu_xy),   nu_xz/(1-nu_xy)  ) )
+
+
+    f.write('\n%25s \n'  
+        %('E_x/(1-nu_xy**2)'  ) )
+
+    f.write('%25.4f \n' \
+        %( E_x/(1-nu_xy**2)   ) )
 
 
 

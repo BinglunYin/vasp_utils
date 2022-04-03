@@ -35,14 +35,25 @@ sub_run_E_in_2_slab(){
     fi
 
 
+#    yin_vasp_univ_find_and_change  -isym  0 
     yin_vasp_univ_find_and_change  -isif  2
+
+    yin_slurm_find_and_change  -srpl  H
+
+    echo -e "0\n0.0  0.0  0.0  0.0  0.0  0.0" > Y_CONSTR_CELL.IN
+
 
     case "$1" in
         -large) 
+#            yin_vasp_univ_find_and_change  -isym  default
             yin_slurm_find_and_change  -srpl  L
             ;;
-        *)     
-            yin_slurm_find_and_change  -srpl  L      
+        -small) 
+#            yin_vasp_univ_find_and_change  -isym  default
+            yin_slurm_find_and_change  -srpl  L 
+            ;;
+        *)
+            echo "run standard..."
             ;;
     esac
    

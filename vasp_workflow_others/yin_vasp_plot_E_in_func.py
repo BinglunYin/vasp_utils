@@ -373,7 +373,7 @@ def plot_E_in(natoms, sys_name, Etot, V0, a, a0, t, t0, deform_type):
         str0 = '%s\n$a_0 = %.4f~\\mathrm{\AA}$\n\n$\\frac{ E_{x} }{ 1-\\nu_{xy} } = %.2f$ GPa\n$E_0 = %.4f$ eV/atom'  \
             %(sys_name, a0, param[0], E0/natoms)
 
-        str1 = '$t_0 = %.4f~\\mathrm{\AA}$\n\n$\\frac{ E_x \\nu_{xz} }{ E_z (1-\\nu_{xy}) } = %.4f $' \
+        str1 = '$t_0 = %.4f~\\mathrm{\AA}$\n\n$\\frac{ \\nu_{xz} }{ 1-\\nu_{xy} } = %.4f $' \
             %(t0, param2[0]/(-2))
 
 
@@ -385,7 +385,7 @@ def plot_E_in(natoms, sys_name, Etot, V0, a, a0, t, t0, deform_type):
         str0 = '%s\n$a_0 = %.4f~\\mathrm{\AA}$\n\n$\\frac{ E_{x} }{ 1-\\nu_{xy}^2 } = %.2f$ GPa\n$E_0 = %.4f$ eV/atom'  \
             %(sys_name, a0, param[0]*2, E0/natoms)
 
-        str1 = '$t_0 = %.4f~\\mathrm{\AA}$\n\n$\\frac{  E_x \\nu_{xz} }{ E_z (1-\\nu_{xy}) } = %.4f $' \
+        str1 = '$t_0 = %.4f~\\mathrm{\AA}$\n\n$\\frac{ \\nu_{xz} }{ 1-\\nu_{xy} } = %.4f $' \
             %(t0, param2[0]/(-1))
 
 
