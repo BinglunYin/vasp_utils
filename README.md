@@ -10,7 +10,7 @@ This repo contains scripts for various VASP workflows, including job submission 
    https://github.com/BinglunYin/vasp_utils    
    https://github.com/BinglunYin/slurm_utils    
 
-1. create a link to `python3` and `pip3` at `$HOME/opt/bin/`.
+1. create links to `python3` and `pip3` at `$HOME/opt/bin/`.
 
 1. pip install a package:     
    ```shell
@@ -46,7 +46,7 @@ This repo contains scripts for various VASP workflows, including job submission 
    yin_vasp_run_eos
    ```
 
-   When all the jobs are done, run the command:    
+   When all the jobs finish, run the command:    
    ```shell
    yin_vasp_plot_all  -eos 
    ```
@@ -97,18 +97,18 @@ This repo contains scripts for various VASP workflows, including job submission 
    ```
 
 
-# Data management.
+# Data management: clean, compress, and store
 
 Inside the `project_folder`, run
 
    ```shell
    yin_vasp_univ_clean_up
    cd ..
-   mv  project_folder  yyyymmdd_project 
-   nohup  ~/yin_github/linux_config/mktar2  -xz  yyyymmdd_project/  &
+   mv  project_folder  yyyymmdd_project_folder
+   nohup  ~/yin_github/linux_config/mktar2  -xz  yyyymmdd_project_folder/  &
    ```
 
-When the compression is successfully completed (check log), move it to `/store`.
+When the compression is successfully completed (check log), move them to `/store`.
 
 
 
