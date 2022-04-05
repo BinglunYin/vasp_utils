@@ -10,12 +10,11 @@ This repo contains scripts for various VASP workflows, including job submission 
    https://github.com/BinglunYin/vasp_utils    
    https://github.com/BinglunYin/slurm_utils    
 
-1. add a link to python3 at:  
-   `$HOME/opt/bin/python3`
+1. create a link to `python3` and `pip3` at `$HOME/opt/bin/`.
 
 1. pip install a package:     
    ```shell
-   pip3 install --upgrade --user   git+https://github.com/BinglunYin/myalloy_package.git  
+   pip3 install --upgrade --user   git+https://github.com/BinglunYin/myalloy_package.git 
    ```
    or download the zip file and 
    ```shell
@@ -30,16 +29,27 @@ This repo contains scripts for various VASP workflows, including job submission 
 # Usage 1: run workflows based on `y_full_relax` 
 
 1. Calculate the reference state in the folder `y_full_relax`. This folder will serve as the basis for the following workflows.  
+   ```shell
+   project_folder
+   ├── y_full_relax
+   │   ├── INCAR
+   │   ├── KPOINTS
+   │   ├── POSCAR
+   │   ├── POTCAR
+   │   ├── sub.vasp
+   ```
+
+
 
 1. For example. If you would like to calculate the EOS of the reference state, run the following command at the level of `y_full_relax`:    
-    ```shell
-    yin_vasp_run_eos
-    ```
+   ```shell
+   yin_vasp_run_eos
+   ```
 
-    When all the jobs are done, run the command:    
-    ```shell
-    yin_vasp_plot_all  -eos 
-    ```
+   When all the jobs are done, run the command:    
+   ```shell
+   yin_vasp_plot_all  -eos 
+   ```
 
    Then you will have the EOS result.   
    
@@ -69,29 +79,29 @@ This repo contains scripts for various VASP workflows, including job submission 
    
 1. To submit jobs, run the following command at the level of `y_src`.   
     
-    ```shell
-    yin_vasp_univ_sub_poscars2
-    ```
+   ```shell
+   yin_vasp_univ_sub_poscars2
+   ```
 
 1. To monitor the job status, run
 
-    ```shell
-    yin_vasp_univ_post
-    ```
+   ```shell
+   yin_vasp_univ_post
+   ```
 
 1. When all the jobs finish, remove the failed jobs from `y_dir`, e.g., aborted, non-converged, etc.
    Then post-analyze and make sure all the remaining jobs in `y_dir` are successfully completed.
 
-    ```shell
-    yin_vasp_univ_post  -v  
-    ```
+   ```shell
+   yin_vasp_univ_post  -v  
+   ```
 
 
 # Data management.
 
 Inside the `project_folder`, run
 
-    ```shell
+   ```shell
    yin_vasp_univ_clean_up
    cd ..
    mv  project_folder  yyyymmdd_project 
