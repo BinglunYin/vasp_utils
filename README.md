@@ -10,17 +10,24 @@ This repo contains scripts for various VASP workflows, including job submission 
    https://github.com/BinglunYin/vasp_utils    
    https://github.com/BinglunYin/slurm_utils    
 
+1. add a link to python3 at:  
+   `$HOME/opt/bin/python3`
+
 1. pip install a package:     
    ```shell
    pip3 install --upgrade --user   git+https://github.com/BinglunYin/myalloy_package.git  
    ```
+   or download the zip file and 
+   ```shell
+   pip3 install --user -e  ./   
+   ```
 
-1. add a link to the python3 at:  
-   `$HOME/opt/bin/python3`
 
 
 
-# Usage
+
+
+# Usage 1: run workflows based on `y_full_relax` 
 
 1. Calculate the reference state in the folder `y_full_relax`. This folder will serve as the basis for the following workflows.  
 
@@ -38,5 +45,60 @@ This repo contains scripts for various VASP workflows, including job submission 
    
 1. All the workflow commands are with the name `yin_vasp_run_*`.
    
+
+
+
+# Usage 2: run a batch of POSCAR files 
+
+
+1. In your `project_folder`, create `y_src` to contain all the source files. These files will not be changed during calculation. 
+
+   ```shell
+   project_folder
+   ├── y_src
+   │   ├── INCAR
+   │   ├── KPOINTS
+   │   ├── POTCAR
+   │   ├── sub.vasp
+   │   ├── poscars2
+   │   │   ├── POSCAR_001 
+   │   │   ├── POSCAR_002 
+   │   │   ├── POSCAR_003 
+   ```
+
+   
+1. To submit jobs, run the following command at the level of `y_src`.   
+    
+    ```shell
+    yin_vasp_univ_sub_poscars2
+    ```
+
+1. To monitor the job status, run
+
+    ```shell
+    yin_vasp_univ_post
+    ```
+
+1. When all the jobs finish, remove the failed jobs from `y_dir`, e.g., aborted, non-converged, etc.
+   Then post-analyze and make sure all the remaining jobs in `y_dir` are successfully completed.
+
+    ```shell
+    yin_vasp_univ_post  -v  
+    ```
+
+
+# Data management.
+
+Inside the `project_folder`, run
+
+    ```shell
+   yin_vasp_univ_clean_up
+   cd ..
+   mv  project_folder  yyyymmdd_project 
+   nohup  ~/yin_github/linux_config/mktar2  -xz  yyyymmdd_project/  &
+   ```
+
+When the compression is successfully completed (check log), move it to `/store`.
+
 
 
