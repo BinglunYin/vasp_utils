@@ -89,12 +89,13 @@ This repo contains scripts for various VASP workflows, including job submission 
    yin_vasp_univ_post
    ```
 
-1. When all the jobs finish, remove the failed jobs from `y_dir`, e.g., aborted, non-converged, etc.
-   Then post-analyze and make sure all the remaining jobs in `y_dir` are successfully completed.
+1. When all the jobs finish, remove the failed jobs from `y_dir`, e.g., aborted, non-converged, etc, and then post-analyze.
 
    ```shell
    yin_vasp_univ_post  -v  
    ```
+
+   Make sure all the remaining jobs in `y_dir` are successfully completed.
 
 
 # Data management: clean, compress, and store
