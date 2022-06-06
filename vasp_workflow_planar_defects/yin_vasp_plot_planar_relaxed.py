@@ -202,6 +202,9 @@ def plot_output(jobn, latoms, dpos_all, gamma, Asf, ibulk):
             
             elif jobn[i] == 'surf':
                 str1 = '$\\gamma_\\mathrm{surf} =$ %.0f mJ/m$^2$' %(gamma[i]/2)
+
+            elif jobn[i] == 'twin':
+                str1 = '$\\gamma_\\mathrm{twin} =$ %.0f mJ/m$^2$' %(gamma[i]/2)
             
             else:
                 str1 = '$\\Delta E / A =$ %.0f mJ/m$^2$'          %(gamma[i])
