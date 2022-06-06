@@ -35,7 +35,7 @@ sub_run_E_in_2_bulk(){
     fi
 
 
-    yin_vasp_univ_find_and_change  -isym  0 
+#    yin_vasp_univ_find_and_change  -isym  0 
     yin_vasp_univ_find_and_change  -isif  3
 
     yin_slurm_find_and_change  -srpl  H
