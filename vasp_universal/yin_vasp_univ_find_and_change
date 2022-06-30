@@ -77,14 +77,30 @@ case "$1" in
 
 
 
-    -tovasp4)
-        echo "==> changing POSCAR to vasp4 format: "
+    -elem_d)
+        echo "==> deleting element info in POSCAR: "
         for filen in ` find ./ -type f -name "POSCAR*" `; do
             echo $filen
             sed '6,6d' $filen > temp
             mv temp $filen
         done
         ;;
+
+
+
+    -elem_i)
+        echo "==> inserting element info" $2 "in POSCAR: "
+        for filen in ` find ./ -type f -name "POSCAR*" `; do
+            echo $filen
+            sed '6i'" $2" $filen > temp
+            mv temp $filen
+        done
+        ;;
+
+
+
+
+
 
 
     -cn)
