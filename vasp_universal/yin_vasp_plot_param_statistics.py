@@ -55,7 +55,7 @@ def main():
                 temp3 = 'EDIFFG > 0 ?'
 
 
-        f.write('\n%10s: %12s %10s    %s \n' \
+        f.write('\n%10s: %10s %10s    %s \n' \
             %( key, temp1, temp2, temp3) )
     
     f.close()

@@ -106,16 +106,17 @@ sub_post(){
     for i1 in `ls $workdir` ; do
     
         resdir=$workdir/$i1
-        echo "resdir:" $resdir 
 
         ut=$[$ut+1]
 
         if [ ! -f $resdir/OUTCAR ] ; then
-            echo -e "    no OUTCAR, continue. "  
+            # echo -e "    no OUTCAR, continue. "  
             ur=$[$ur+1]
             uf=$[$uf+1]
             continue
         fi
+
+        echo "resdir:" $resdir 
 
 
         #--------------------
