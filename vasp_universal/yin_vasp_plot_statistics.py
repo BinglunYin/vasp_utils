@@ -46,10 +46,14 @@ def write_output(jobn, E0, V, V0, p):
         %('mean', 'std', 'max-mean', 'min-mean' ) )
 
 
-    data = np.vstack([E0, V0, p])
-    str1 = ['E0 (eV/atom):', 'V0 (Ang^3/atom):', 'p (kBar):']
+    a_fcc = (V0*4)**(1/3)
+    a_bcc = (V0*2)**(1/3)
 
-    for i in np.arange(3):
+
+    data = np.vstack([E0, V0, p, a_fcc, a_bcc])
+    str1 = ['E0 (eV/atom):', 'V0 (Ang^3/atom):', 'p (kBar):', 'a_fcc (Ang):', 'a_bcc (Ang):']
+
+    for i in np.arange(data.shape[0]):
         f.write('\n %s\n' %(str1[i]) )
         f.write('%12.4f %12.4f %12.4f %12.4f \n' \
         %(data[i,:].mean(), data[i,:].std(), \
@@ -57,15 +61,6 @@ def write_output(jobn, E0, V, V0, p):
             data[i,:].min()-data[i,:].mean() ))
 
 
-    f.write('\n\n a_fcc (Ang):\n')
-    f.write('%12.4f %12.4f \n' \
-        %(  V2a_fcc(V0.mean()), \
-            V2a_fcc(V0.mean())-V2a_fcc(V0.mean()-V0.std()) ))
-
-    f.write('\n a_bcc (Ang):\n')
-    f.write('%12.4f %12.4f \n' \
-        %(  V2a_bcc(V0.mean()), \
-            V2a_bcc(V0.mean())-V2a_bcc(V0.mean()-V0.std()) ))
 
 
     f.write('\n\n%16s %12s %12s %12s %12s \n' \
@@ -78,17 +73,6 @@ def write_output(jobn, E0, V, V0, p):
     f.close()
     
     
-
-def V2a_fcc(V):
-    a = (V*4)**(1/3)
-    return a
-
-
-
-def V2a_bcc(V):
-    a = (V*2)**(1/3)
-    return a
-
 
 
 main()
