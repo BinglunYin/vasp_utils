@@ -18,8 +18,6 @@ def main():
         if key == 'jobname':
             continue
         
-        f.write('\n%10s:' \
-            %( key ) )
     
         l = []
         for i in np.arange( len(ljobs) ):
@@ -57,8 +55,8 @@ def main():
                 temp3 = 'EDIFFG > 0 ?'
 
 
-        f.write('%10s %10s   %s \n' \
-            %( temp1, temp2, temp3) )
+        f.write('\n%10s: %12s %10s    %s \n' \
+            %( key, temp1, temp2, temp3) )
     
     f.close()
     
@@ -90,6 +88,9 @@ def vasp_read_post_param(filename='y_post_param.txt', \
             'LREAL': temp[6][6:] ,
 
             'KP': temp[7][3:] ,
+
+            'kmesh': temp[8],
+
         }
                 
         ljobs.append(job)
