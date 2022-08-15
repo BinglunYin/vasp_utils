@@ -67,8 +67,8 @@ def main():
 
 
 
-def vasp_read_post_param(filename='y_post_param', \
-    filename2='y_post_param_2', ):
+def vasp_read_post_param(filename='y_post_param.txt', \
+    filename2='y_post_param_2.txt', ):
        
     ljobs = []
 
