@@ -4,11 +4,25 @@
 
 
 main(){
+
+
+    y_post_data=y_post_data.txt
+    y_post_data_2=y_post_data_2.txt  
+    y_post_time=y_post_time.txt  
+    y_post_param=y_post_param.txt  
+    y_post_param_2=y_post_param_2.txt  
+    y_post_diff=y_post_diff.txt
+    y_post_warning=y_post_warning.txt  
+
+ 
+    #--------------------
+
     workdir=y_dir
     d0=`pwd`
    
     # dir count
-    dc=`find ./ -type d -name $workdir -printf '.' | wc -c`
+    dc=`find ./ -type d -name $workdir  -print | wc -l`  
+    echo "==> Number of $workdir: $dc "
     
     if [ $dc -gt 10 ]; then
         echo "==> Too many ($dc) dir found. Continue? [y or n] "
@@ -46,8 +60,8 @@ main(){
     echo -e "\n==> post summary: "
     for dirn in $mylist; do
         echo -e "\n$dirn"
-        cat $dirn/../y_post_time
-        grep "Your highest band" $dirn/../y_post_warning
+        cat $dirn/../$y_post_time
+        grep "Your highest band" $dirn/../$y_post_warning
     done
     echo " "
 }
@@ -57,14 +71,14 @@ main(){
 
 
 sub_post(){
-    echo 'i1   energy(sigma->0)(eV)   EENTRO(eV)   -stress(kB)' > ./y_post_data
-    echo 'i1   volume   pressure(kB)   Fmax'                    > ./y_post_data_2
+    echo 'i1   energy(sigma->0)(eV)   EENTRO(eV)   -stress(kB)' > ./$y_post_data
+    echo 'i1   volume   pressure(kB)   Fmax'                    > ./$y_post_data_2
     
-    echo 'i1   job state: relaxed? time? CPUs? memory?'         > ./y_post_time
-    echo 'i1   input parameters'                                > ./y_post_param
-    echo 'i1   input parameters 2'                              > ./y_post_param_2
-    echo 'i1   diff INCAR KPOINTS POTCAR sub.*'                 > ./y_post_diff
-    echo 'i1   WARNING'                                         > ./y_post_warning 
+    echo 'i1   job state: relaxed? time? CPUs? memory?'         > ./$y_post_time
+    echo 'i1   input parameters'                                > ./$y_post_param
+    echo 'i1   input parameters 2'                              > ./$y_post_param_2
+    echo 'i1   diff INCAR KPOINTS POTCAR sub.*'                 > ./$y_post_diff
+    echo 'i1   WARNING'                                         > ./$y_post_warning 
    
     
     refdir=`ls -d -- $workdir/*/  |   head -1`
@@ -93,7 +107,17 @@ sub_post(){
     
         resdir=$workdir/$i1
         echo "resdir:" $resdir 
- 
+
+        ut=$[$ut+1]
+
+        if [ ! -f $resdir/OUTCAR ] ; then
+            echo -e "    no OUTCAR, continue. "  
+            ur=$[$ur+1]
+            uf=$[$uf+1]
+            continue
+        fi
+
+
         #--------------------
         
         j1=`grep 'energy  without entropy' $resdir/OUTCAR | tail -1`
@@ -104,16 +128,21 @@ sub_post(){
         
         j3=`grep 'in kB' $resdir/OUTCAR | tail -1`
         
-        echo -e $i1"\t"$j11"\t"$j22"\t"$j3 >> ./y_post_data
+        echo -e $i1"\t"$j11"\t"$j22"\t"$j3 >> ./$y_post_data
 
         
         #--------------------
  
         jv=`grep "volume of cell"     $resdir/OUTCAR                 | tail -1 | awk '{printf $5}'`
         jp=`grep "external pressure"  $resdir/OUTCAR                 | tail -1 | awk '{printf $4}'`
-        jF=`grep -A1 norm             $resdir/y_force_to_relax.out   | tail -1 | awk '{printf $2}'`
-        
-        echo -e $i1"\t"$jv"\t"$jp"\t"$jF >> ./y_post_data_2
+    
+        if [ -f $resdir/y_force_to_relax.out ] ; then
+            jF=`grep -A1 norm         $resdir/y_force_to_relax.out   | tail -1 | awk '{printf $2}'`        
+        else 
+            jF="0"
+        fi 
+                
+        echo -e $i1"\t"$jv"\t"$jp"\t"$jF >> ./$y_post_data_2
         
         
         #--------------------
@@ -125,7 +154,7 @@ sub_post(){
         k5=`grep 'Maximum memory'    $resdir/OUTCAR | awk '{printf $2" "$5}'`
         k6=`grep 'LOOP'              $resdir/OUTCAR | head -1 | awk '{printf $1$7}'`
         
-        ut=$[$ut+1]
+
         
         if [ "$k2" = "" ]; then
             ur=$[$ur+1]
@@ -135,7 +164,7 @@ sub_post(){
             uf=$[$uf+1]
         fi
         
-        echo -e $i1"\t"$k1"\t"$k2"\t"$k3"\t"$k4"\t"$k5"\t"$k6 >> ./y_post_time
+        echo -e $i1"\t"$k1"\t"$k2"\t"$k3"\t"$k4"\t"$k5"\t"$k6 >> ./$y_post_time
 
         
         #--------------------
@@ -148,17 +177,23 @@ sub_post(){
 
         k36=`grep 'LREAL'             $resdir/OUTCAR  | tail -1 | awk '{printf $1$2$3}'`
         k37=`grep 'has the point symmetry' $resdir/OUTCAR  | head -1 | awk '{printf $8}'`        
-        k38=`sed -n '4,4p'            $resdir/KPOINTS | awk '{printf "KP="$1}'`
+        
+        if [ -f $resdir/KPOINTS ] ; then
+            k38=`sed -n '4,4p'        $resdir/KPOINTS | awk '{printf "KP="$1}'`
+        else 
+            k38="KP=0"
+        fi 
+        
         k39=`grep 'generate k-points' $resdir/OUTCAR  | awk '{printf $4"*"$5"*"$6}'`
         k40=`grep 'NBANDS='           $resdir/OUTCAR  | head -1 | awk '{printf $2$3$4" "$14$15}'`
 
-        echo -e $i1"\t"$k31" "$k32" "$k33" "$k34" "$k35" "$k36" "$k38" "$k39" "$k40" "$k37 >> ./y_post_param
+        echo -e $i1"\t"$k31" "$k32" "$k33" "$k34" "$k35" "$k36" "$k38" "$k39" "$k40" "$k37 >> ./$y_post_param
        
  
 
 
 
-#--------------------
+        #--------------------
         
         k41=`grep 'ISTART'           $resdir/OUTCAR  | awk '{printf "ISTART="$3}'`
         k42=`grep 'ICHARG'           $resdir/OUTCAR  | awk '{printf "ICHARG="$3}'`
@@ -174,26 +209,31 @@ sub_post(){
         k50=`grep     'support grid'   $resdir/OUTCAR  | awk '{printf $4}'`
 
 
-        echo -e $i1"\t"$k41" "$k42" "$k43" "$k44" "$k45" "$k46" "$k47" "$k48" "$k49" "$k50 >> ./y_post_param_2
+        echo -e $i1"\t"$k41" "$k42" "$k43" "$k44" "$k45" "$k46" "$k47" "$k48" "$k49" "$k50 >> ./$y_post_param_2
        
 
 
 
         #--------------------
         
-        echo -e "\n==================\n "$i1"\n==================\n " >> ./y_post_warning
+        echo -e "\n==================\n "$i1"\n==================\n " >> ./$y_post_warning
         
-        grep       "WARNING"                                    $resdir/OUTCAR  >> ./y_post_warning
-        grep -A 10 "W    W  A    A  R    R  N    N  II  N    N" $resdir/OUTCAR  >> ./y_post_warning
+        grep       "WARNING"                                    $resdir/OUTCAR  >> ./$y_post_warning
+        grep -A 10 "W    W  A    A  R    R  N    N  II  N    N" $resdir/OUTCAR  >> ./$y_post_warning
        
  
         #--------------------
 
-        echo -e "\n==================\n "$i1"\n==================\n " >> ./y_post_diff
+        echo -e "\n==================\n "$i1"\n==================\n " >> ./$y_post_diff
         
         for j1 in "${arr[@]}" ; do
-            echo -e "\n$j1:\n"               >> ./y_post_diff  
-            diff $refdir/$j1   $resdir/$j1   >> ./y_post_diff
+            echo -e "\n$j1:\n"                    >> ./$y_post_diff  
+
+            if [ -f $refdir/$j1 ] && [ -f $resdir/$j1 ]  ; then
+                diff $refdir/$j1   $resdir/$j1    >> ./$y_post_diff
+            else 
+                echo -e "    (no file to diff) "  >> ./$y_post_diff  
+            fi             
         done
         
     
@@ -202,11 +242,11 @@ sub_post(){
     
    
  
-    echo -e "\n----------------------------------"
-    echo "|  total number of jobs: " $ut
-    echo "|      un-finished jobs: " $uf
-    echo "|       un-relaxed jobs: " $ur
-    echo -e "----------------------------------\n"
+    echo -e "\n----------------------------------"   >> ./$y_post_time
+    echo "|  total number of jobs: " $ut             >> ./$y_post_time
+    echo "|      un-finished jobs: " $uf             >> ./$y_post_time
+    echo "|       un-relaxed jobs: " $ur             >> ./$y_post_time
+    echo -e "----------------------------------\n"   >> ./$y_post_time
     
     
     ls -lshG $workdir/*/slurm-*
