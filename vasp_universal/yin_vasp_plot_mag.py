@@ -50,8 +50,8 @@ def plot_output(latoms2, jobn):
         atom_num = latoms2[i].get_atomic_numbers()
         elem_num = pd.unique( atom_num )
         nelem = len(elem_num)
-        print('elem_sym, elem_num, nelem:', \
-            elem_sym, elem_num, nelem)
+        # print('elem_sym, elem_num, nelem:', \
+        #     elem_sym, elem_num, nelem)
 
         ymax = np.ceil( max([1.5, abs(max(magmom, key=abs)) ]) )
 

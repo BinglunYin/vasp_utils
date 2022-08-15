@@ -227,20 +227,19 @@ sub_post(){
         echo -e "\n==================\n "$i1"\n==================\n " >> ./$y_post_diff
         
         for j1 in "${arr[@]}" ; do
-            echo -e "\n$j1:\n"                    >> ./$y_post_diff  
 
             if [ -f $refdir/$j1 ] && [ -f $resdir/$j1 ]  ; then
-                diff $refdir/$j1   $resdir/$j1    >> ./$y_post_diff
-            else 
-                echo -e "    (no file to diff) "  >> ./$y_post_diff  
+                echo -e "\n$j1:\n"                >> ./$y_post_diff  
+                diff $refdir/$j1   $resdir/$j1    >> ./$y_post_diff            
             fi             
         done
         
     
     done
     #===================
+    # loop end
+    #===================    
     
-   
  
     echo -e "\n----------------------------------"   >> ./$y_post_time
     echo "|  total number of jobs: " $ut             >> ./$y_post_time
