@@ -30,3 +30,23 @@ find ./ -name "slurm-*"  -size +1G  -delete
 
 
 
+
+
+d0=`pwd`
+mylist=`find ./ -type d -name poscars`
+for dirn in $mylist; do
+    cd $dirn
+
+    echo -e "\n==> delete CHGCAR in the following dir:"
+    pwd
+
+    find ./ -name CHGCAR    -exec ls -lsh {} \;
+    find ./ -name CHGCAR    -delete
+
+    cd $d0
+    unset dirn
+done
+
+
+
+

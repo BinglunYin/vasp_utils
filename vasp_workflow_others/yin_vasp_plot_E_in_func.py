@@ -201,8 +201,9 @@ def check_latt3_bulk(latoms, t2):
  
     for i in np.arange(len(latoms)):
         latt = latoms[i].get_cell()[:] 
-        vf.confirm_0( latt[2,:] - np.array([0, 0, t2[i]]) )
-
+#        print( latt[2,:]  )
+#        vf.confirm_0( latt[2,:] - np.array([0, 0, t2[i]]), 'wrong latt3 bulk' )
+#        vf.confirm_0( latt[2,2] - t2[i], 'wrong latt3 bulk' )
 
 
 

@@ -31,8 +31,8 @@ sub_plot_all(){
     echo -e "\n==> ${FUNCNAME[0]} summary: "
     for dirn in $mylist ; do
         echo -e "\n$dirn"
-        cat $dirn/y_post_time
-        grep "Your highest band" $dirn/y_post_warning
+        cat $dirn/y_post_time.txt
+        grep "Your highest band" $dirn/y_post_warning.txt
     done
     echo " "
 

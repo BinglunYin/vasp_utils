@@ -97,7 +97,7 @@ sub_run_E_in_2_bulk(){
         yin_vasp_univ_find_and_change  -a0  $a0new        
 
 
-        # echo -e "3\n0.0  0.0  0.0  0.0  0.0  0.0" > Y_CONSTR_CELL.IN
+        echo -e "356\n0.0  0.0  0.0  0.0  0.0  0.0" > Y_CONSTR_CELL.IN
 
 
         echo 'submit dir:' `pwd`
