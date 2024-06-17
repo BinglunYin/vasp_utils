@@ -28,12 +28,16 @@ def post_E_in(deform_type='E_in_2', struc_type='bulk'):
  
     #==========================      
 
-    natoms, a, t, tv = calc_a_t(latoms) 
+    natoms, a, t, tv = calc_a_t(latoms, struc_type) 
 
     a0, t0 = calc_a0_t0(a, Etot, t) 
 
     A0 = calc_A0(latoms, el=a/a0, deform_type=deform_type)
-    V0 = A0 * t0 * nlayers/(nlayers-1)
+    
+    if struc_type=='bulk':
+        V0 = A0 * t0
+    elif struc_type=='slab':
+        V0 = A0 * t0 * nlayers/(nlayers-1)
 
 
     if deform_type == 'E_in_2':
@@ -69,7 +73,7 @@ def post_E_in(deform_type='E_in_2', struc_type='bulk'):
 
 
 
-def calc_a_t(latoms):
+def calc_a_t(latoms, struc_type):
     natoms = latoms[0].get_positions().shape[0]
 
     a = np.array([])   # lattice constant 
@@ -80,14 +84,21 @@ def calc_a_t(latoms):
         latt = latoms[i].get_cell()[:] 
         a = np.append(a, latt[0,0] )
 
-        pos = latoms[i].get_positions()
-        vf.confirm_0( pos.shape[0] - natoms )
-   
-        temp = pos[:,2].max() - pos[:,2].min()
-        t = np.append(t, temp)
- 
-        temp2 = latt[2,2] - temp 
-        tv = np.append(tv, temp2) 
+
+        if struc_type=='bulk':
+            t  = np.append(t, latt[2,2])
+            tv = np.append(tv, 0)
+
+        elif struc_type=='slab':
+            pos = latoms[i].get_positions()
+            vf.confirm_0( pos.shape[0] - natoms )
+            
+            temp = pos[:,2].max() - pos[:,2].min()
+            temp2 = latt[2,2] - temp 
+            
+            t = np.append(t, temp)
+            tv = np.append(tv, temp2) 
+
 
     return natoms, a, t, tv     
 

@@ -8,12 +8,14 @@ from myvasp import vasp_func as vf
 def main():
     jobn, Etot, Eent, pres = vf.vasp_read_post_data()
     
-    if Etot.shape[0] < 5.9:
+    if Etot.shape[0] < 6.9:
         import sys
         sys.exit("\n==> ABORT: insufficient data \n" )
     
-    pres0 = vf.read_pressure('../y_full_relax/OUTCAR')
-    temp = np.vstack( (pres, pres0) ) 
+#    pres0 = vf.read_pressure('../y_full_relax/OUTCAR')
+#    temp = np.vstack( (pres, pres0) ) 
+
+    temp = pres.copy() 
     
     s=temp.copy()
     s[:,3] = temp[:,4]
@@ -173,40 +175,68 @@ def write_output(s, s_d, Cij_d, fitres, C14, Cij_cubic, Cij_hcp):
     f.write("%10.2f %10.2f \n" %( C14.mean(), C14.std()) )
     
     
-    f.write("\n# if cubic, C11, C12, C44: \n"  )
+    f.write("\n\n# if cubic, C11, C12, C44: \n"  )
     cij_mean=np.array([])
     for i in np.arange(len(Cij_cubic)):
         temp=np.array(Cij_cubic[i],  dtype=np.float64 )
         cij_mean = np.append(cij_mean, temp.mean() )
         f.write("%10.2f %10.2f \n" %( temp.mean(), temp.std()) )
 
+
+    c11=cij_mean[0]
+    c12=cij_mean[1]
+    c44=cij_mean[2]
+
     f.write("\n# B_fcc: \n"  )
-    f.write("%10.2f \n\n" %( (cij_mean[0] + 2*cij_mean[1])/3 ))
+    f.write("%10.2f \n" %( (c11 + 2*c12)/3 ))
+
+    f.write("\n# bi-axial: \n"  )
+    A_100 = c11 + c12 - 2*c12**2/c11
+    A_111 = 6*(c11 + 2*c12)*c44 / (c11 + 2*c12 + 4*c44)
+
+    f.write('%12s %12s \n'
+        %('A_100', 'A_111') )
+
+    f.write('%12.4f %12.4f \n' \
+        %( A_100,   A_111 ) )
+
+
+
+
+ 
     
-    
-    f.write("\n# if hcp, C11, C12, C13, C33, C44, (C66): \n"  )
+    f.write("\n\n# if hcp, C11, C12, C13, C33, C44, (C66): \n"  )
     cij_mean=np.array([])
     for i in np.arange(len(Cij_hcp)):
         temp=np.array(Cij_hcp[i],  dtype=np.float64 )
         cij_mean = np.append(cij_mean, temp.mean() )
         f.write("%10.2f %10.2f \n" %( temp.mean(), temp.std()) )
-    
-    f.write("\n# C66-(C11-C12)/2: \n"  )
-    f.write("%10.2f \n" %( cij_mean[5] - ( cij_mean[0] - cij_mean[1] )/2 ))
 
-    f.write("\n# B_hcp: \n"  )
+
     c11=cij_mean[0]
     c12=cij_mean[1]
     c13=cij_mean[2]
     c33=cij_mean[3]
     c44=cij_mean[4]
+    c66=cij_mean[5]
 
-    f.write("%10.2f \n\n" %( (c11*c33 + c12*c33 - 2*c13**2)/(c11 + c12 - 4*c13 + 2*c33) ))
+    f.write("\n# C66-(C11-C12)/2: \n"  )
+    f.write("%10.2f \n" %( c66 - ( c11 - c12 )/2 ))
+
+    f.write("\n# B_hcp: \n"  )
+    f.write("%10.2f \n" %( (c11*c33 + c12*c33 - 2*c13**2)/(c11 + c12 - 4*c13 + 2*c33) ))
     
+    f.write("\n# bi-axial: \n"  )
+    A_0001 = c11 + c12 - 2*c13**2/c33
+
+    f.write('%12s \n'
+        %('A_0001') )
+
+    f.write('%12.4f \n' \
+        %( A_0001 ) )
 
 
-
-    f.write("# Transverse isotropy \n")
+    f.write("\n# Transverse isotropy \n")
 
     from myalloy import calc_elastic_constant as ce  
     E_x, E_z, nu_xy, nu_xz, mu_xz = ce.calc_transverse_isotropy( cij_mean[0:-1] )
@@ -231,7 +261,7 @@ def write_output(s, s_d, Cij_d, fitres, C14, Cij_cubic, Cij_hcp):
     f.write('\n%25s \n'  
         %('E_x/(1-nu_xy**2)'  ) )
 
-    f.write('%25.4f \n' \
+    f.write('%25.4f \n\n' \
         %( E_x/(1-nu_xy**2)   ) )
 
 

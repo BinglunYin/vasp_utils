@@ -7,8 +7,14 @@ import os
 
 
 def main():
-   
-    atoms_ref = vf.my_read_vasp('../y_full_relax/CONTCAR')  # for strain 
+  
+    try:
+        atoms_ref = vf.my_read_vasp('../y_full_relax/CONTCAR')  # for strain 
+        print('reading ref CONTCAR...') 
+    except:
+        atoms_ref = vf.my_read_vasp('../y_full_relax/POSCAR')  # for strain
+        print('reading ref POSCAR...')
+
  
     dirlist=[
         'y_cij_energy_c11', 
